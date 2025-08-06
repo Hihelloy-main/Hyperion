@@ -207,7 +207,7 @@ public class EarthGuard extends EarthAbility implements AddonAbility {
 
 		originalMode = player.getGameMode();
 		player.getInventory().setArmorContents(newArmor.toArray(new ItemStack[4]));
-		new TempPotionEffect(player, new PotionEffect(PotionEffectType.RESISTANCE, NumberConversions.round(duration / 50F), resistance));
+		new TempPotionEffect(player, new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, NumberConversions.round(duration / 50F), resistance));
 		time = System.currentTimeMillis();
 		formed = true;
 	}
@@ -315,7 +315,7 @@ public class EarthGuard extends EarthAbility implements AddonAbility {
 			armorFallingBlock.remove();
 		}
 		if (formed) {
-			player.removePotionEffect(PotionEffectType.RESISTANCE);
+			player.removePotionEffect(PotionEffectType.DAMAGE_RESISTANCE);
 			if (!originalMode.equals(player.getGameMode())) {
 				for (ItemStack armorItem : oldArmor) {
 					if (armorItem != null && armorItem.getType() != Material.AIR) {

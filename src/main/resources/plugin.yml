@@ -1,10 +1,13 @@
 name: Hyperion
 description: Addon plugin for ProjectKorra
-author: Moros
+author: Moros & Hihelloy
 version: ${pluginVersion}
 main: me.moros.hyperion.Hyperion
 depend: [ProjectKorra]
-api-version: 1.17
+folia-supported: true
+api-version: '1.20'
+load: POSTWORLD
+
 permissions:
   bending.admin.overridelock:
     default: false

@@ -192,7 +192,7 @@ public class IceCrawl extends IceAbility implements AddonAbility {
 					final MovementHandler mh = new MovementHandler((LivingEntity) entity, CoreAbility.getAbility(IceCrawl.class));
 					mh.stopWithDuration(duration / 50, Element.ICE.getColor() + "* Frozen *");
 					new BendingFallingBlock(entity.getLocation().clone().add(0, -0.2, 0), Material.PACKED_ICE.createBlockData(), new Vector(), this, false, duration);
-					new TempPotionEffect((LivingEntity) entity, new PotionEffect(PotionEffectType.SLOWNESS, NumberConversions.round(duration / 50F), 5));
+					new TempPotionEffect((LivingEntity) entity, new PotionEffect(PotionEffectType.SLOW, NumberConversions.round(duration / 50F), 5));
 				}
 				hasHit = true;
 			}

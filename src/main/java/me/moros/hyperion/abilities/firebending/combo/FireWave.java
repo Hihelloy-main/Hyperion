@@ -19,7 +19,7 @@
 
 package me.moros.hyperion.abilities.firebending.combo;
 
-import com.projectkorra.projectkorra.Element.SubElement;
+
 import com.projectkorra.projectkorra.GeneralMethods;
 import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.AirAbility;
@@ -34,7 +34,7 @@ import com.projectkorra.projectkorra.firebending.WallOfFire;
 import com.projectkorra.projectkorra.firebending.util.FireDamageTimer;
 import com.projectkorra.projectkorra.util.ClickType;
 import com.projectkorra.projectkorra.util.DamageHandler;
-import com.projectkorra.projectkorra.util.ParticleEffect;
+import me.moros.hyperion.util.ParticleEffect;
 import com.projectkorra.projectkorra.waterbending.SurgeWall;
 import com.projectkorra.projectkorra.waterbending.SurgeWave;
 import me.moros.hyperion.Hyperion;
@@ -55,6 +55,8 @@ import java.util.ListIterator;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
+
+import static com.projectkorra.projectkorra.Element.BLUE_FIRE;
 
 public class FireWave extends FireAbility implements AddonAbility, ComboAbility {
 	private final Set<Block> blocks = new HashSet<>();
@@ -96,7 +98,7 @@ public class FireWave extends FireAbility implements AddonAbility, ComboAbility 
 		maxHeight = Hyperion.getPlugin().getConfig().getInt("Abilities.Fire.FireCombo.FireWave.MaxHeight");
 		width = Hyperion.getPlugin().getConfig().getInt("Abilities.Fire.FireCombo.FireWave.Width");
 
-		if (bPlayer.canUseSubElement(SubElement.BLUE_FIRE)) {
+		if (bPlayer.canUseSubElement(BLUE_FIRE)) {
 			damage *= BlueFireAbility.getDamageFactor();
 			height *= BlueFireAbility.getRangeFactor();
 			maxHeight *= BlueFireAbility.getRangeFactor();
@@ -301,7 +303,7 @@ public class FireWave extends FireAbility implements AddonAbility, ComboAbility 
 	@Override
 	public void handleCollision(Collision collision) {
 		if (collision.getAbilitySecond() instanceof SurgeWave || collision.getAbilitySecond() instanceof SurgeWall) {
-			if (!bPlayer.canUseSubElement(SubElement.BLUE_FIRE)) collision.setRemovingFirst(true);
+			if (!bPlayer.canUseSubElement(BLUE_FIRE)) collision.setRemovingFirst(true);
 			if (collision.getAbilitySecond() instanceof SurgeWall && ((SurgeWall) collision.getAbilitySecond()).isFrozen()) {
 				collision.setRemovingSecond(false);
 			}

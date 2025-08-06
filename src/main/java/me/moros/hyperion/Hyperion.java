@@ -25,18 +25,25 @@ import me.moros.hyperion.listeners.AbilityListener;
 import me.moros.hyperion.listeners.CoreListener;
 import me.moros.hyperion.methods.CoreMethods;
 import me.moros.hyperion.util.BendingFallingBlock;
+import me.moros.hyperion.util.PotionEffectAdapter;
+import me.moros.hyperion.util.PotionEffectAdapterFactory;
 import me.moros.hyperion.util.TempArmorStand;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.logging.Logger;
 
 public class Hyperion extends JavaPlugin {
-	private static Hyperion plugin;
+	public static Hyperion plugin;
 	private static String author;
 	private static String version;
 	private static Logger log;
 	private static PersistentDataLayer layer;
+	public static boolean isFolia;
+	public static boolean paper;
+	public static boolean luminol;
+	private PotionEffectAdapter potionEffectAdapter;
 
 	@Override
 	public void onEnable() {
@@ -45,23 +52,71 @@ public class Hyperion extends JavaPlugin {
 		version = getDescription().getVersion();
 		author = getDescription().getAuthors().get(0);
 
+		try {
+			Class.forName("io.papermc.paper.threadedregions.RegionizedServer");
+			isFolia = true;
+		} catch (ClassNotFoundException ignored) {}
+
+		try {
+			Class.forName("com.destroystokyo.paper.PaperConfig");
+			paper = true;
+		} catch (ClassNotFoundException ignored) {}
+
+		try {
+			Class.forName("me.earthme.luminol.api.ThreadedRegion");
+			luminol = true;
+		} catch (ClassNotFoundException ignored) {}
+
 		new Metrics(this, 8212);
 		new ConfigManager();
 		new HyperionCommand();
 		layer = new PersistentDataLayer();
+		checkMaintainer();
 		CoreMethods.loadAbilities();
 
 		getServer().getPluginManager().registerEvents(new AbilityListener(), this);
 		getServer().getPluginManager().registerEvents(new CoreListener(), this);
-		getServer().getScheduler().scheduleSyncRepeatingTask(this, TempArmorStand::manage, 0, 1);
-		getServer().getScheduler().scheduleSyncRepeatingTask(this, BendingFallingBlock::manage, 0, 5);
+
+		// Use appropriate scheduler depending on platform
+		if (isFolia || luminol) {
+			// Folia & Luminol require initial delay > 0
+			getServer().getGlobalRegionScheduler().runAtFixedRate(this, task -> TempArmorStand.manage(), 1L, 1L);
+			getServer().getGlobalRegionScheduler().runAtFixedRate(this, task -> BendingFallingBlock.manage(), 1L, 5L);
+		} else {
+			new BukkitRunnable() {
+				@Override
+				public void run() {
+					TempArmorStand.manage();
+				}
+			}.runTaskTimer(this, 0L, 1L);
+
+			new BukkitRunnable() {
+				@Override
+				public void run() {
+					BendingFallingBlock.manage();
+				}
+			}.runTaskTimer(this, 0L, 5L);
+		}
+
+		PotionEffectAdapterFactory potionEffectAdapterFactory = new PotionEffectAdapterFactory();
+		potionEffectAdapter = potionEffectAdapterFactory.getAdapter();
+
+		if (author.contains("Hihelloy (Maintainer)")) {
+			getLogger().info("Hihelloy is the current maintainer of Hyperion");
+		} else {
+			getLogger().warning("Hihelloy is the current maintainer of Hyperion, but the plugin had trouble loading that D:");
+		}
 	}
 
 	@Override
 	public void onDisable() {
 		BendingFallingBlock.removeAll();
 		TempArmorStand.removeAll();
-		getServer().getScheduler().cancelTasks(this);
+
+		// Avoid cancelTasks on Folia/Luminol (unsupported)
+		if (!isFolia && !luminol) {
+			getServer().getScheduler().cancelTasks(this);
+		}
 	}
 
 	public static void reload() {
@@ -71,6 +126,12 @@ public class Hyperion extends JavaPlugin {
 		TempArmorStand.removeAll();
 		CoreMethods.loadAbilities();
 		getLog().info("Hyperion Reloaded.");
+	}
+
+	public static void checkMaintainer() {
+		if (!author.contains("Hihelloy (Maintainer)")) {
+			author = author + ", Hihelloy (Maintainer)";
+		}
 	}
 
 	public static Hyperion getPlugin() {
@@ -91,5 +152,21 @@ public class Hyperion extends JavaPlugin {
 
 	public static PersistentDataLayer getLayer() {
 		return layer;
+	}
+
+	public PotionEffectAdapter getPotionEffectAdapter() {
+		return this.potionEffectAdapter;
+	}
+
+	public static boolean isFolia() {
+		return isFolia;
+	}
+
+	public static boolean isPaper() {
+		return paper;
+	}
+
+	public static boolean isLuminol() {
+		return luminol;
 	}
 }
