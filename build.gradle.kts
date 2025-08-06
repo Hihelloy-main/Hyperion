@@ -1,6 +1,6 @@
 plugins {
     java
-    id("com.github.johnrengelman.shadow") version "8.1.1" // official Shadow plugin
+    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 group = "me.moros"
@@ -23,14 +23,14 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:1.20.2-R0.1-SNAPSHOT")
     compileOnly(files("libs/ProjectKorra-1.12.1-PRE-RELEASE-1.jar"))
 
-    implementation("org.bstats:bstats-bukkit:3.1.0") // We want this included and relocated
+    implementation("org.bstats:bstats-bukkit:3.1.0")
 }
 
 tasks {
     shadowJar {
-        archiveClassifier.set("") // Remove the "-all" suffix
-        relocate("org.bstats", "me.moros.hyperion.bstats") // Relocate bStats to avoid conflict
-        minimize() // Only include used classes from implementation deps
+        archiveClassifier.set("") // No "-all" suffix
+        relocate("org.bstats", "me.moros.hyperion.bstats")
+        minimize()
     }
 
     build {

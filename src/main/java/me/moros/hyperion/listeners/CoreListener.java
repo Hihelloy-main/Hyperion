@@ -69,6 +69,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import static me.moros.hyperion.Hyperion.isFolia;
+import static me.moros.hyperion.Hyperion.luminol;
+
 public class CoreListener implements Listener {
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void EntityChangeBlockEvent(final EntityChangeBlockEvent event) {
@@ -208,7 +211,14 @@ public class CoreListener implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPKReload(final BendingReloadEvent event) {
-		Bukkit.getScheduler().runTaskLater(Hyperion.getPlugin(), Hyperion::reload, 1);
+		if (!isFolia && !luminol) {
+			Bukkit.getScheduler().runTaskLater(Hyperion.getPlugin(), Hyperion::reload1, 1);
+		}
+
+		if (isFolia || luminol) {
+			Bukkit.getGlobalRegionScheduler().runDelayed(Hyperion.getPlugin(), Hyperion::reload, 1);
+		}
+
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)

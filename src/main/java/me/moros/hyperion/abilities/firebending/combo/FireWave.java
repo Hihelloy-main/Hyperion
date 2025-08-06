@@ -34,7 +34,7 @@ import com.projectkorra.projectkorra.firebending.WallOfFire;
 import com.projectkorra.projectkorra.firebending.util.FireDamageTimer;
 import com.projectkorra.projectkorra.util.ClickType;
 import com.projectkorra.projectkorra.util.DamageHandler;
-import me.moros.hyperion.util.ParticleEffect;
+import com.projectkorra.projectkorra.util.ParticleEffect;
 import com.projectkorra.projectkorra.waterbending.SurgeWall;
 import com.projectkorra.projectkorra.waterbending.SurgeWave;
 import me.moros.hyperion.Hyperion;

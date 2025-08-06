@@ -22,6 +22,7 @@ package me.moros.hyperion.abilities.airbending;
 import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.AirAbility;
 import me.moros.hyperion.Hyperion;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
@@ -30,6 +31,7 @@ public class Evade extends AirAbility implements AddonAbility {
 	private Vector direction;
 
 	private long cooldown;
+
 
 	private double angleStep;
 

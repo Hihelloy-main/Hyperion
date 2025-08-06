@@ -48,12 +48,9 @@ import org.bukkit.util.Vector;
 import java.util.concurrent.ThreadLocalRandom;
 
 
-import static me.moros.hyperion.util.ParticleEffect.*;
-import static me.moros.hyperion.util.ParticleEffect.EXPLOSION_HUGE;
-import static me.moros.hyperion.util.ParticleEffect.FIREWORKS_SPARK;
-import static me.moros.hyperion.util.ParticleEffect.FLAME;
-import static me.moros.hyperion.util.ParticleEffect.SMOKE_LARGE;
-import static me.moros.hyperion.util.ParticleEffect.SMOKE_NORMAL;
+import static com.projectkorra.projectkorra.util.ParticleEffect.*;
+import static com.projectkorra.projectkorra.util.ParticleEffect.FIREWORKS_SPARK;
+import static com.projectkorra.projectkorra.util.ParticleEffect.SMOKE_LARGE;
 
 public class Combustion extends CombustionAbility implements AddonAbility {
 	private Location location;

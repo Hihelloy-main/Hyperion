@@ -31,6 +31,7 @@ import com.projectkorra.projectkorra.util.TempBlock;
 import com.projectkorra.projectkorra.util.TempPotionEffect;
 import me.moros.hyperion.Hyperion;
 import me.moros.hyperion.util.BendingFallingBlock;
+import me.moros.hyperion.util.PotionMetaUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.GameMode;
@@ -207,7 +208,7 @@ public class EarthGuard extends EarthAbility implements AddonAbility {
 
 		originalMode = player.getGameMode();
 		player.getInventory().setArmorContents(newArmor.toArray(new ItemStack[4]));
-		new TempPotionEffect(player, new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, NumberConversions.round(duration / 50F), resistance));
+	new TempPotionEffect(player, new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, NumberConversions.round(duration / 50F), resistance));
 		time = System.currentTimeMillis();
 		formed = true;
 	}

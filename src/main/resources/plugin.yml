@@ -1,6 +1,6 @@
 name: Hyperion
 description: Addon plugin for ProjectKorra
-author: Moros & Hihelloy
+author: Moros
 version: ${pluginVersion}
 main: me.moros.hyperion.Hyperion
 depend: [ProjectKorra]

@@ -54,6 +54,7 @@ import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -95,6 +96,7 @@ public class EarthLine extends EarthAbility implements AddonAbility {
 	private boolean launched;
 	private boolean targetLocked;
 	private boolean collapsing;
+	private final List<TempArmorStand> armorStands = new ArrayList<>();
 
 	private boolean makeSpikes;
 	private double earthLineSpeed;
@@ -142,8 +144,20 @@ public class EarthLine extends EarthAbility implements AddonAbility {
 		}
 	}
 
+	private void removeExpiredArmorStands() {
+		Iterator<TempArmorStand> it = armorStands.iterator();
+		while (it.hasNext()) {
+			TempArmorStand stand = it.next();
+			if (stand.isExpired()) {
+				stand.remove();
+				it.remove();
+			}
+		}
+	}
 	@Override
 	public void progress() {
+		removeExpiredArmorStands();
+		TempArmorStand.manage();
 		if (launched) {
 			if (!bPlayer.canBendIgnoreBindsCooldowns(this)) {
 				remove();
@@ -265,6 +279,7 @@ public class EarthLine extends EarthAbility implements AddonAbility {
 		pillar2.setCooldown(0);
 		pillar2.setInterval(100);
 		remove();
+		removeExpiredArmorStands();
 	}
 
 	private void advanceLocation() {
@@ -451,7 +466,9 @@ public class EarthLine extends EarthAbility implements AddonAbility {
 
 	@Override
 	public void remove() {
+		removeExpiredArmorStands();
 		sourceBlock.revertBlock();
+		BendingFallingBlock.removeAll();
 		super.remove();
 	}
 
