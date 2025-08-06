@@ -1,8 +1,8 @@
 # Hyperion
 
-[![Gradle CI](https://img.shields.io/github/actions/workflow/status/PrimordialMoros/Hyperion/gradle.yml?branch=master&style=flat-square)](https://github.com/PrimordialMoros/Hyperion/actions)
-[![License](https://img.shields.io/github/license/PrimordialMoros/Hyperion?color=blue&style=flat-square)](LICENSE)
-[![GitHub release](https://img.shields.io/github/v/release/PrimordialMoros/Hyperion?style=flat-square)](https://github.com/PrimordialMoros/Hyperion/releases)
+[![Gradle CI](https://img.shields.io/github/actions/workflow/status/Hihelloy-main/Hyperion/gradle.yml?branch=master&style=flat-square)](https://github.com/Hihelloy-main/Hyperion/actions)
+[![License](https://img.shields.io/github/license/Hihelloy-main/Hyperion?color=blue&style=flat-square)](LICENSE)
+[![GitHub release](https://img.shields.io/github/v/release/Hihelloy-main/Hyperion?style=flat-square)](https://github.com/Hihelloy-main/Hyperion/releases)
 
 **New**: Modifier System. Read more about it on the [wiki](https://github.com/PrimordialMoros/Hyperion/wiki/Modifiers)!
 
