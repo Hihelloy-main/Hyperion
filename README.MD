@@ -5,10 +5,7 @@
 [![GitHub release](https://img.shields.io/github/v/release/Hihelloy-main/Hyperion?style=flat-square)](https://github.com/Hihelloy-main/Hyperion/releases)
 [![Github Downloads](https://img.shields.io/github/downloads/Hihelloy-main/Hyperion/total.svg)](https://github.com/Hihelloy-main/Hyperion/releases)
 
-Hi, I'm Hihelloy, and this is my fork of Moro's Hyperion ProjectKorra side plugin.
-**New**: Modifier System. Read more about it on the [wiki](https://github.com/PrimordialMoros/Hyperion/wiki/Modifiers)!
-
-Addon plugin for ProjectKorra with an emphasis on intricate mechanics
+Hi, I'm Hihelloy, and this is my fork of Moro's Hyperion ProjectKorra Addon plugin!
 
 ## Abilities
 ### Air
