@@ -1,22 +1,3 @@
-/*
- * Copyright 2016-2024 Moros
- *
- * This file is part of Hyperion.
- *
- * Hyperion is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * Hyperion is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Hyperion. If not, see <https://www.gnu.org/licenses/>.
- */
-
 package me.moros.hyperion.util;
 
 import com.projectkorra.projectkorra.ability.CoreAbility;
@@ -88,7 +69,7 @@ public class BendingFallingBlock {
 			final BendingFallingBlock bfb = bfbQueue.peek();
 			if (currentTime > bfb.getExpirationTime()) {
 				bfbQueue.poll();
-				bfb.remove();
+				bfb.remove(); // Remove expired falling blocks
 			} else {
 				return;
 			}
@@ -98,20 +79,34 @@ public class BendingFallingBlock {
 		while (iterator.hasNext()) {
 			BendingFallingBlock bfb = iterator.next();
 			if (currentTime > bfb.getExpirationTime()) {
-				bfb.getFallingBlock().remove();
-				iterator.remove();
+				// Safely remove the falling block if it exists
+				if (bfb.getFallingBlock() != null && bfb.getFallingBlock().isValid()) {
+					bfb.getFallingBlock().remove();
+				}
+				iterator.remove(); // Clean up the map entry after removal
 			}
 		}
 	}
 
 	public void remove() {
-		instances.remove(fallingBlock);
-		fallingBlock.remove();
+		// Ensure the falling block is valid before trying to remove it
+		if (fallingBlock != null && fallingBlock.isValid()) {
+			instances.remove(fallingBlock);
+			fallingBlock.remove();
+		} else {
+			// Log or handle the case where the falling block is already removed or invalid
+			System.out.println("Falling block is null or invalid, cannot remove.");
+		}
 	}
 
 	public static void removeAll() {
 		bfbQueue.clear();
-		instances.keySet().forEach(Entity::remove);
+		// Ensure entities are valid before removal
+		instances.keySet().forEach(fb -> {
+			if (fb != null && fb.isValid()) {
+				fb.remove();
+			}
+		});
 		instances.clear();
 	}
 }

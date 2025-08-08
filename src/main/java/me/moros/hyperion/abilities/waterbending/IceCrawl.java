@@ -30,7 +30,6 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.NumberConversions;
 import org.bukkit.util.Vector;
 
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -139,7 +138,10 @@ public class IceCrawl extends IceAbility implements AddonAbility {
 		if (isWater(down)) {
 			TempBlock tb = new TempBlock(down, Material.ICE.createBlockData(), iceDuration);
 			PhaseChange.getFrozenBlocksMap().put(tb, player);
-			tempBlocks.add(tb);
+			tempBlocks.add(tb);  // Track the temporary ice block
+
+			// Debugging info
+			System.out.println("TempBlock added: " + tb.getBlock().getLocation());
 		}
 
 		double x = ThreadLocalRandom.current().nextDouble(-0.125, 0.125);
@@ -243,17 +245,22 @@ public class IceCrawl extends IceAbility implements AddonAbility {
 	@Override
 	public void remove() {
 		super.remove();
+
+		// Cleanup Armor Stands
 		for (TempArmorStand stand : armorStands) {
 			stand.remove();
 		}
 		armorStands.clear();
+
+		// Revert all temporary ice blocks
 		for (TempBlock tb : tempBlocks) {
-			tb.revertBlock();
+			tb.revertBlock();  // This should remove the ice block
 		}
 		tempBlocks.clear();
-	}
 
-	// ... getters and static shootLine() remain unchanged ...
+		// Additional debugging log
+		System.out.println("IceCrawl ability removed, ice blocks reverted.");
+	}
 
 	@Override public boolean isEnabled() {
 		return Hyperion.getPlugin().getConfig()

@@ -66,7 +66,13 @@ public class Hyperion extends JavaPlugin {
 			luminol = true;
 		} catch (ClassNotFoundException ignored) {}
 
-		new Metrics(this, 8212);
+        if (!isLuminol()) {
+            getLogger().info("[Hyperion] Hyperion is running on Paper/Folia");
+        } else {
+            getLogger().info("[Hyperion] Hyperion is running on Luminol");
+        }
+
+        new Metrics(this, 8212);
 		new ConfigManager();
 		new HyperionCommand();
 		layer = new PersistentDataLayer();
