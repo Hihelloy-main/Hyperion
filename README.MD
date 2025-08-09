@@ -5,7 +5,7 @@
 [![GitHub release](https://img.shields.io/github/v/release/Hihelloy-main/Hyperion?style=flat-square)](https://github.com/Hihelloy-main/Hyperion/releases)
 [![Github Downloads](https://img.shields.io/github/downloads/Hihelloy-main/Hyperion/total.svg)](https://github.com/Hihelloy-main/Hyperion/releases)
 
-Hi, I'm Hihelloy, and this is my fork of Moros's ProjectKorra Addon plugin, Hyperion!
+Hi, I'm Hihelloy, and this is my unofficial fork of Moros's ProjectKorra Addon plugin, Hyperion!
 
 ## Abilities
 ### Air
