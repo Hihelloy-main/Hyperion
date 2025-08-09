@@ -135,4 +135,14 @@ public class RainbowWave extends RainbowFireAbility implements AddonAbility {
     public String getVersion() {
         return Hyperion.getVersion();
     }
+
+    @Override
+    public String getInstructions() {
+        return "Punch twice";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Shoot a beam/wave of RainbowFire at your opponent";
+    }
 }
