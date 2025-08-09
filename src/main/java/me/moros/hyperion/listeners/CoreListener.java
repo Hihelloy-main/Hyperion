@@ -35,12 +35,10 @@ import me.moros.hyperion.methods.CoreMethods;
 import me.moros.hyperion.util.BendingFallingBlock;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TranslatableComponent;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Nameable;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.Lockable;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.EntityType;
@@ -211,12 +209,15 @@ public class CoreListener implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPKReload(final BendingReloadEvent event) {
+		final CommandSender sender = event.getSender();
 		if (!isFolia && !luminol) {
 			Bukkit.getScheduler().runTaskLater(Hyperion.getPlugin(), Hyperion::reload1, 1);
+			sender.sendMessage(ChatColor.GRAY + "[Hyperion]" + ChatColor.RED + ChatColor.ITALIC + " Bukkit" + ChatColor.RESET + ChatColor.RED + " Config reloaded");
 		}
 
 		if (isFolia || luminol) {
 			Bukkit.getGlobalRegionScheduler().runDelayed(Hyperion.getPlugin(), Hyperion::reload, 1);
+			sender.sendMessage(ChatColor.GRAY + "[Hyperion]" + ChatColor.RED + ChatColor.ITALIC + " Folia" + ChatColor.RESET + ChatColor.RED + " Config reloaded");
 		}
 
 	}

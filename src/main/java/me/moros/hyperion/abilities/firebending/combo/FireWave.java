@@ -25,7 +25,6 @@ import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.AirAbility;
 import com.projectkorra.projectkorra.ability.BlueFireAbility;
 import com.projectkorra.projectkorra.ability.ComboAbility;
-import com.projectkorra.projectkorra.ability.FireAbility;
 import com.projectkorra.projectkorra.ability.util.Collision;
 import com.projectkorra.projectkorra.ability.util.ComboManager.AbilityInformation;
 import com.projectkorra.projectkorra.attribute.Attribute;
@@ -38,6 +37,8 @@ import com.projectkorra.projectkorra.util.ParticleEffect;
 import com.projectkorra.projectkorra.waterbending.SurgeWall;
 import com.projectkorra.projectkorra.waterbending.SurgeWave;
 import me.moros.hyperion.Hyperion;
+import me.moros.hyperion.abilities.Elements.FireAbility;
+import me.moros.hyperion.abilities.Elements.RainbowFireAbility;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.ArmorStand;
@@ -57,6 +58,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 import static com.projectkorra.projectkorra.Element.BLUE_FIRE;
+import static me.moros.hyperion.Elements.RAINBOWFIRE;
 
 public class FireWave extends FireAbility implements AddonAbility, ComboAbility {
 	private final Set<Block> blocks = new HashSet<>();
@@ -104,6 +106,14 @@ public class FireWave extends FireAbility implements AddonAbility, ComboAbility 
 			maxHeight *= BlueFireAbility.getRangeFactor();
 			width *= BlueFireAbility.getRangeFactor();
 			cooldown *= BlueFireAbility.getCooldownFactor();
+		}
+
+		if (bPlayer.canUseSubElement(RAINBOWFIRE)) {
+			damage *= RainbowFireAbility.getDamageFactor();
+			height *= RainbowFireAbility.getRangeFactor();
+			maxHeight *= RainbowFireAbility.getRangeFactor();
+			width *= RainbowFireAbility.getRangeFactor();
+			cooldown *= RainbowFireAbility.getCooldownFactor();
 		}
 
 		damage = getDayFactor(damage, player.getWorld());

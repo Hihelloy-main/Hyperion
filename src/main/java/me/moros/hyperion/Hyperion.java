@@ -21,6 +21,7 @@ package me.moros.hyperion;
 
 import com.projectkorra.projectkorra.util.TempFallingBlock;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
+import me.moros.hyperion.abilities.Elements.FireAbility;
 import me.moros.hyperion.commands.HyperionCommand;
 import me.moros.hyperion.configuration.ConfigManager;
 import me.moros.hyperion.listeners.AbilityListener;
@@ -28,6 +29,8 @@ import me.moros.hyperion.listeners.CoreListener;
 import me.moros.hyperion.methods.CoreMethods;
 import me.moros.hyperion.util.*;
 import org.bstats.bukkit.Metrics;
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -75,6 +78,7 @@ public class Hyperion extends JavaPlugin {
         new Metrics(this, 8212);
 		new ConfigManager();
 		new HyperionCommand();
+		new Elements();
 		layer = new PersistentDataLayer();
 		checkMaintainer();
 		CoreMethods.loadAbilities();
@@ -87,6 +91,7 @@ public class Hyperion extends JavaPlugin {
 			getServer().getGlobalRegionScheduler().runAtFixedRate(this, task -> TempFallingBlock.manage(), 1L, 5L);
 			getServer().getGlobalRegionScheduler().runAtFixedRate(this, task -> TempArmorStand.manage(), 1L, 1L);
 			getServer().getGlobalRegionScheduler().runAtFixedRate(this, task -> BendingFallingBlock.manage(), 1L, 5L);
+			getServer().getGlobalRegionScheduler().runAtFixedRate(this, task -> FireAbility.getAbilities(), 1L, 5L);
 		} else {
 			new BukkitRunnable() {
 				@Override

@@ -52,12 +52,20 @@ public class ThreadUtil {
     }
 
     public static void runLocationLater(Location location, Runnable runnable, long delayTicks) {
-        if (Hyperion.isFolia() || Hyperion.isLuminol()) {
-            Bukkit.getRegionScheduler().runDelayed(PLUGIN, location, task -> runnable.run(), delayTicks);
+        boolean isAsyncScheduler = Hyperion.isFolia() || Hyperion.isLuminol();
+
+        if (isAsyncScheduler) {
+            if (location != null && location.getWorld() != null) {
+                Bukkit.getRegionScheduler().runDelayed(PLUGIN, location, task -> runnable.run(), delayTicks);
+            } else {
+                Bukkit.getLogger().warning("[Hyperion] Cannot schedule region task: location or world is null. Falling back to main scheduler.");
+                Bukkit.getGlobalRegionScheduler().runDelayed(PLUGIN, task -> runnable.run(), delayTicks);
+            }
         } else {
             Bukkit.getScheduler().runTaskLater(PLUGIN, runnable, delayTicks);
         }
     }
+
 
     public static void runEntityLater(Location loc, Runnable runnable, long delayTicks) {
         if (Hyperion.isFolia() || Hyperion.isLuminol()) {
