@@ -26,7 +26,6 @@ Hi, I'm Hihelloy, and this is my fork of Moro's ProjectKorra Addon plugin, Hyper
 * Combustion
 * FlameRush
 * FireWave (combo)
-* RainbowWave 
 ### Water
 * IceBreath
 * IceCrawl
