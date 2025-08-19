@@ -4,6 +4,7 @@ import com.projectkorra.projectkorra.GeneralMethods;
 import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.util.DamageHandler;
 import me.moros.hyperion.Hyperion;
+import me.moros.hyperion.abilities.Elements.FireAbility;
 import me.moros.hyperion.abilities.Elements.RainbowFireAbility;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -16,7 +17,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class RainbowWave extends RainbowFireAbility implements AddonAbility {
+import static me.moros.hyperion.Elements.RAINBOWFIRE;
+import static me.moros.hyperion.abilities.Elements.RainbowFireAbility.playRainbowFireParticles;
+
+public class RainbowWave extends FireAbility implements AddonAbility {
 
     private static final String path = "Abilities.Fire.RainbowWave.";
 
@@ -41,6 +45,10 @@ public class RainbowWave extends RainbowFireAbility implements AddonAbility {
         if (!bPlayer.canBend(this)) return;
         if (hasAbility(player, RainbowWave.class)) return;
         if (bPlayer.isOnCooldown(this)) return;
+        if (bPlayer.canUseSubElement(RAINBOWFIRE)) {
+            damage *= RainbowFireAbility.getDamageFactor();
+            cooldown *= RainbowFireAbility.getCooldownFactor();
+        }
 
         loadConfigValues();
 
