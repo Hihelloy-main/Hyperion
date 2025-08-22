@@ -1,21 +1,19 @@
 package me.moros.hyperion.util;
 
-import io.papermc.paper.threadedregions.scheduler.RegionScheduler;
+import com.cjcrafter.foliascheduler.ServerImplementation;
 import me.moros.hyperion.Hyperion;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-
 import org.bukkit.entity.Entity;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
-
-
 
 public class ThreadUtil {
 
     private static final Plugin PLUGIN = Hyperion.plugin;
     private static final boolean THREAD_UTIL_AVAILABLE;
     private static final Class<?> THREAD_UTIL_CLASS;
+    private static final ServerImplementation SCHEDULER = Hyperion.scheduler;
 
     static {
         Class<?> threadUtilClass = null;
@@ -28,12 +26,14 @@ public class ThreadUtil {
 
     public static void ensureLocation(Location location, Runnable runnable) {
         if (Hyperion.isFolia() || Hyperion.isLuminol()) {
-            if (Bukkit.isOwnedByCurrentRegion(location) || Bukkit.isStopping()) {
+            if (Hyperion.scheduler.isOwnedByCurrentRegion(location)) {
                 runnable.run();
                 return;
             }
-            RegionScheduler scheduler = Bukkit.getRegionScheduler();
-            scheduler.execute(PLUGIN, location, runnable);
+            SCHEDULER.region(location).run(task -> {
+                runnable.run();
+                return null;
+            });
         } else {
             if (Bukkit.isPrimaryThread()) {
                 runnable.run();
@@ -45,31 +45,40 @@ public class ThreadUtil {
 
     public static void runGlobalLater(Runnable runnable, long delayTicks) {
         if (Hyperion.isFolia() || Hyperion.isLuminol()) {
-            Bukkit.getGlobalRegionScheduler().runDelayed(PLUGIN, task -> runnable.run(), delayTicks);
+            SCHEDULER.global().runDelayed(task -> {
+                runnable.run();
+                return null;
+            }, delayTicks);
         } else {
             Bukkit.getScheduler().runTaskLater(PLUGIN, runnable, delayTicks);
         }
     }
 
     public static void runLocationLater(Location location, Runnable runnable, long delayTicks) {
-        boolean isAsyncScheduler = Hyperion.isFolia() || Hyperion.isLuminol();
-
-        if (isAsyncScheduler) {
+        if (Hyperion.isFolia() || Hyperion.isLuminol()) {
             if (location != null && location.getWorld() != null) {
-                Bukkit.getRegionScheduler().runDelayed(PLUGIN, location, task -> runnable.run(), delayTicks);
+                SCHEDULER.region(location).runDelayed(task -> {
+                    runnable.run();
+                    return null;
+                }, delayTicks);
             } else {
-                Bukkit.getLogger().warning("[Hyperion] Cannot schedule region task: location or world is null. Falling back to main scheduler.");
-                Bukkit.getGlobalRegionScheduler().runDelayed(PLUGIN, task -> runnable.run(), delayTicks);
+                Bukkit.getLogger().warning("[Hyperion] Cannot schedule region task: location or world is null. Falling back to global scheduler.");
+                SCHEDULER.global().runDelayed(task -> {
+                    runnable.run();
+                    return null;
+                }, delayTicks);
             }
         } else {
             Bukkit.getScheduler().runTaskLater(PLUGIN, runnable, delayTicks);
         }
     }
 
-
     public static void runEntityLater(Location loc, Runnable runnable, long delayTicks) {
         if (Hyperion.isFolia() || Hyperion.isLuminol()) {
-            Bukkit.getRegionScheduler().runDelayed(PLUGIN, loc, task -> runnable.run(), delayTicks);
+            SCHEDULER.region(loc).runDelayed(task -> {
+                runnable.run();
+                return null;
+            }, delayTicks);
         } else {
             Bukkit.getScheduler().runTaskLater(PLUGIN, runnable, delayTicks);
         }

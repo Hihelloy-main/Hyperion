@@ -3,7 +3,6 @@ package me.moros.hyperion.abilities.Elements;
 import com.projectkorra.projectkorra.Element;
 import com.projectkorra.projectkorra.ability.Ability;
 import com.projectkorra.projectkorra.ability.SubAbility;
-import com.projectkorra.projectkorra.util.ThreadUtil;
 import me.moros.hyperion.Elements;
 import me.moros.hyperion.Hyperion;
 import me.moros.hyperion.util.RainbowParticleEffect;

@@ -20,7 +20,7 @@ import java.util.Set;
 import static me.moros.hyperion.Elements.RAINBOWFIRE;
 import static me.moros.hyperion.abilities.Elements.RainbowFireAbility.playRainbowFireParticles;
 
-public class RainbowWave extends FireAbility implements AddonAbility {
+public class RainbowWave extends RainbowFireAbility implements AddonAbility {
 
     private static final String path = "Abilities.Fire.RainbowWave.";
 

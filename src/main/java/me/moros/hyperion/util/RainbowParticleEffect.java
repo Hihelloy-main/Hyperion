@@ -1,10 +1,10 @@
 package me.moros.hyperion.util;
 
-import com.destroystokyo.paper.ParticleBuilder;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Particle.DustOptions;
+import org.bukkit.World;
 import org.bukkit.util.Vector;
 
 import java.util.Arrays;
@@ -31,6 +31,9 @@ public class RainbowParticleEffect {
     );
 
     public static void spawnRainbowParticleEffect(Location center, int amount) {
+        World world = center.getWorld();
+        if (world == null) return;
+
         for (int i = 0; i < amount; i++) {
 
             Particle particle;
@@ -52,20 +55,24 @@ public class RainbowParticleEffect {
             double offsetZ = (random.nextDouble() - 0.5) * 2.0;
             Location loc = center.clone().add(offsetX, offsetY, offsetZ);
 
-            // Velocity
+            // Velocity vector (Spigot does not directly support velocity in spawnParticle)
             Vector velocity = new Vector(
                     (random.nextDouble() - 0.5) * 0.2,
                     random.nextDouble() * 0.2,
                     (random.nextDouble() - 0.5) * 0.2
             );
 
-            new ParticleBuilder(particle)
-                    .location(loc)
-                    .count(0)
-                    .offset((float) velocity.getX(), (float) velocity.getY(), (float) velocity.getZ())
-                    .extra(0)
-                    .data(data)
-                    .spawn();
+            // Spawn the particle
+            world.spawnParticle(
+                    particle,
+                    loc,
+                    0, // count (0 for manual velocity)
+                    velocity.getX(),
+                    velocity.getY(),
+                    velocity.getZ(),
+                    0,  // extra (speed)
+                    data
+            );
         }
     }
 }

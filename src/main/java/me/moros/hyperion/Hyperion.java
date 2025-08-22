@@ -19,8 +19,11 @@
 
 package me.moros.hyperion;
 
-import com.projectkorra.projectkorra.util.TempFallingBlock;
-import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
+
+import com.cjcrafter.foliascheduler.FoliaCompatibility;
+import com.cjcrafter.foliascheduler.ServerImplementation;
+import com.cjcrafter.foliascheduler.util.ReflectionUtil;
+import com.projectkorra.projectkorra.BendingPlayer;
 import me.moros.hyperion.abilities.Elements.FireAbility;
 import me.moros.hyperion.commands.HyperionCommand;
 import me.moros.hyperion.configuration.ConfigManager;
@@ -28,13 +31,14 @@ import me.moros.hyperion.listeners.AbilityListener;
 import me.moros.hyperion.listeners.CoreListener;
 import me.moros.hyperion.methods.CoreMethods;
 import me.moros.hyperion.util.*;
-import org.bstats.bukkit.Metrics;
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
+import org.bstats.bukkit.Metrics;;
+import org.bukkit.block.Block;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-
 import java.util.logging.Logger;
+
+import static com.projectkorra.projectkorra.util.TempFallingBlock.get;
+import static com.projectkorra.projectkorra.util.TempFallingBlock.manage;
 
 public class Hyperion extends JavaPlugin {
 	public static Hyperion plugin;
@@ -45,15 +49,18 @@ public class Hyperion extends JavaPlugin {
 	public static boolean isFolia;
 	public static boolean paper;
 	public static boolean luminol;
+	public static boolean spigot;
 	private PotionEffectAdapter potionEffectAdapter;
+	public static ServerImplementation scheduler;
+
 
 	@Override
 	public void onEnable() {
 		plugin = this;
+		scheduler = new FoliaCompatibility(plugin).getServerImplementation();
 		log = getLogger();
 		version = getDescription().getVersion();
 		author = getDescription().getAuthors().get(0);
-
 		try {
 			Class.forName("io.papermc.paper.threadedregions.RegionizedServer");
 			isFolia = true;
@@ -69,16 +76,26 @@ public class Hyperion extends JavaPlugin {
 			luminol = true;
 		} catch (ClassNotFoundException ignored) {}
 
-        if (!isLuminol()) {
-            getLogger().info("[Hyperion] Hyperion is running on Paper/Folia");
-        } else {
-            getLogger().info("[Hyperion] Hyperion is running on Luminol");
-        }
+		if (!isLuminol() && isPaper()) {
+			getLogger().info("Hyperion is running on Paper/Folia");
+		}
 
-        new Metrics(this, 8212);
+		if (isLuminol() && !spigot) {
+			getLogger().info("Hyperion is running on Luminol");
+		}
+
+		if (!isFolia && !paper && !luminol) {
+			spigot = true;
+			getLogger().info("Hyperion is running on Spigot");
+		}
+
+		new Metrics(this, 8212);
 		new ConfigManager();
 		new HyperionCommand();
 		new Elements();
+		getLogger().info("Initialized Hyperion Elements/Configs/Commands/Metrics");
+		getLogger().info("Attempting to load PaperLib");
+		new PaperLib();
 		layer = new PersistentDataLayer();
 		checkMaintainer();
 		CoreMethods.loadAbilities();
@@ -88,15 +105,30 @@ public class Hyperion extends JavaPlugin {
 
 		// Use appropriate scheduler depending on platform
 		if (isFolia || luminol) {
-			getServer().getGlobalRegionScheduler().runAtFixedRate(this, task -> TempFallingBlock.manage(), 1L, 5L);
-			getServer().getGlobalRegionScheduler().runAtFixedRate(this, task -> TempArmorStand.manage(), 1L, 1L);
-			getServer().getGlobalRegionScheduler().runAtFixedRate(this, task -> BendingFallingBlock.manage(), 1L, 5L);
-			getServer().getGlobalRegionScheduler().runAtFixedRate(this, task -> FireAbility.getAbilities(), 1L, 5L);
+			scheduler.global().runAtFixedRate(task -> {
+				manage();
+				return null;
+			}, 1L, 5L);
+
+			scheduler.global().runAtFixedRate(task -> {
+				TempArmorStand.manage();
+				return null;
+			}, 1L, 1L);
+
+			scheduler.global().runAtFixedRate(task -> {
+				BendingFallingBlock.manage();
+				return null;
+			}, 1L, 5L);
+
+			scheduler.global().runAtFixedRate(task -> {
+				FireAbility.getAbilities();
+				return null;
+			}, 1L, 5L);
 		} else {
 			new BukkitRunnable() {
 				@Override
 				public void run() {
-					TempFallingBlock.manage();
+					manage();
 				}
 			}.runTaskTimer(this, 0L, 5L);
 
@@ -130,14 +162,13 @@ public class Hyperion extends JavaPlugin {
 		BendingFallingBlock.removeAll();
 		TempArmorStand.removeAll();
 
-		// Avoid Bukkit cancelTasks on Folia/Luminol (unsupported)
 		if (!isFolia && !luminol) {
 			getServer().getScheduler().cancelTasks(this);
 		}
-		// Use a Folia/Luminol compatible version of cancelTasks
-		if (isFolia || luminol ) {
-            getServer().getGlobalRegionScheduler().cancelTasks(this);
-        }
+
+		if (isFolia || luminol) {
+			scheduler.global().cancelTasks();
+		}
 	}
 
 	public static void reload1() {
@@ -146,15 +177,19 @@ public class Hyperion extends JavaPlugin {
 		BendingFallingBlock.removeAll();
 		TempArmorStand.removeAll();
 		CoreMethods.loadAbilities();
+		new HyperionCommand();
+		getLog().info("Trying to initialize commands once more");
 		getLog().info("Hyperion BUKKIT Reloaded.");
 	}
 
-	public static void reload(ScheduledTask scheduledTask) {
+	public static void reload() {
 		Hyperion.getPlugin().reloadConfig();
 		ConfigManager.modifiersConfig.reloadConfig();
 		BendingFallingBlock.removeAll();
 		TempArmorStand.removeAll();
 		CoreMethods.loadAbilities();
+		new HyperionCommand();
+		getLog().info("Trying to initialize commands once more");
 		getLog().info("Hyperion FOLIA Reloaded.");
 	}
 
@@ -200,4 +235,7 @@ public class Hyperion extends JavaPlugin {
 		return luminol;
 	}
 
+	public static boolean isSpigot() {
+		return spigot;
+	}
 }

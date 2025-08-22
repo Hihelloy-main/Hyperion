@@ -1,12 +1,4 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
-
 package me.moros.hyperion.util;
-
-
-import java.util.concurrent.CompletableFuture;
 
 
 import me.moros.hyperion.Hyperion;
@@ -14,11 +6,22 @@ import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
-import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
+import java.util.concurrent.CompletableFuture;
+
 public class PaperLib {
-    private static Environment ENVIRONMENT;
+    private static final Environment ENVIRONMENT;
+
+    static {
+        if (Hyperion.isFolia()) {
+            ENVIRONMENT = new Folia();
+        } else if (Hyperion.isPaper()) {
+            ENVIRONMENT = new Paper();
+        } else {
+            ENVIRONMENT = new Spigot();
+        }
+    }
 
     public static CompletableFuture<Chunk> getChunkAtAsync(Location location) {
         return ENVIRONMENT.getChunkAtAsync(location);
@@ -32,19 +35,8 @@ public class PaperLib {
         return ENVIRONMENT.teleportAsync(entity, location);
     }
 
-    public static CompletableFuture<Boolean> teleportAsync(Entity entity, Location location, PlayerTeleportEvent.TeleportCause cause) {
+    public static CompletableFuture<Boolean> teleportAsync(Entity entity, Location location, TeleportCause cause) {
         return ENVIRONMENT.teleportAsync(entity, location, cause);
-    }
-
-    static {
-        if (Hyperion.isFolia()) {
-            ENVIRONMENT = new Folia();
-        } else if (Hyperion.isPaper()) {
-            ENVIRONMENT = new Paper();
-        } else {
-            ENVIRONMENT = new Spigot();
-        }
-
     }
 
     private interface Environment {
@@ -52,48 +44,60 @@ public class PaperLib {
             return this.getChunkAtAsync(location.getBlock());
         }
 
-        CompletableFuture<Chunk> getChunkAtAsync(Block var1);
+        CompletableFuture<Chunk> getChunkAtAsync(Block block);
 
         default CompletableFuture<Boolean> teleportAsync(Entity entity, Location location) {
             return this.teleportAsync(entity, location, TeleportCause.PLUGIN);
         }
 
-        CompletableFuture<Boolean> teleportAsync(Entity var1, Location var2, PlayerTeleportEvent.TeleportCause var3);
+        CompletableFuture<Boolean> teleportAsync(Entity entity, Location location, TeleportCause cause);
     }
 
-    static class Spigot implements Environment {
+    private static class Spigot implements Environment {
+        @Override
         public CompletableFuture<Chunk> getChunkAtAsync(Block block) {
             return CompletableFuture.completedFuture(block.getChunk());
         }
 
-        public CompletableFuture<Boolean> teleportAsync(Entity entity, Location location, PlayerTeleportEvent.TeleportCause cause) {
+        @Override
+        public CompletableFuture<Boolean> teleportAsync(Entity entity, Location location, TeleportCause cause) {
             entity.teleport(location, cause);
             return CompletableFuture.completedFuture(true);
         }
     }
 
-    static class Paper implements Environment {
+    private static class Paper implements Environment {
+        @Override
         public CompletableFuture<Chunk> getChunkAtAsync(Block block) {
-            return block.getWorld().getChunkAtAsync(block);
+            CompletableFuture<Chunk> future = new CompletableFuture<>();
+            Hyperion.scheduler.region(block.getLocation()).run(() -> {
+                future.complete(block.getChunk());
+            });
+            return future;
         }
 
-        public CompletableFuture<Boolean> teleportAsync(Entity entity, Location location, PlayerTeleportEvent.TeleportCause cause) {
-            return entity.teleportAsync(location, cause);
+        @Override
+        public CompletableFuture<Boolean> teleportAsync(Entity entity, Location location, TeleportCause cause) {
+            return Hyperion.scheduler.teleportAsync(entity, location, cause);
         }
     }
 
-    static class Folia implements Environment {
+    private static class Folia implements Environment {
+        @Override
         public CompletableFuture<Chunk> getChunkAtAsync(Block block) {
-            CompletableFuture<Chunk> future = new CompletableFuture();
-            ThreadUtil.ensureLocation(block.getLocation(), () -> {
+            CompletableFuture<Chunk> future = new CompletableFuture<>();
+            // Use CJCrafter's scheduler to run synchronously in the region thread
+            Hyperion.scheduler.region(block.getLocation()).run(task -> {
                 Chunk chunk = block.getWorld().getChunkAt(block);
                 future.complete(chunk);
             });
             return future;
         }
 
-        public CompletableFuture<Boolean> teleportAsync(Entity entity, Location location, PlayerTeleportEvent.TeleportCause cause) {
-            return entity.teleportAsync(location, cause);
+        @Override
+        public CompletableFuture<Boolean> teleportAsync(Entity entity, Location location, TeleportCause cause) {
+            // Folia supports async teleport natively
+            return Hyperion.scheduler.teleportAsync(entity, location, cause);
         }
     }
 }

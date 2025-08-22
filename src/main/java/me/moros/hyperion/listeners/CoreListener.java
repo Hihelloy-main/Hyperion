@@ -19,6 +19,7 @@
 
 package me.moros.hyperion.listeners;
 
+import com.cjcrafter.foliascheduler.folia.FoliaTask;
 import com.projectkorra.projectkorra.BendingPlayer;
 import com.projectkorra.projectkorra.ability.CoreAbility;
 import com.projectkorra.projectkorra.event.AbilityStartEvent;
@@ -40,12 +41,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Lockable;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Arrow;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.FallingBlock;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Snowball;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -67,8 +63,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import static me.moros.hyperion.Hyperion.isFolia;
-import static me.moros.hyperion.Hyperion.luminol;
+import static me.moros.hyperion.Hyperion.*;
 
 public class CoreListener implements Listener {
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
@@ -210,17 +205,21 @@ public class CoreListener implements Listener {
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPKReload(final BendingReloadEvent event) {
 		final CommandSender sender = event.getSender();
-		if (!isFolia && !luminol) {
-			Bukkit.getScheduler().runTaskLater(Hyperion.getPlugin(), Hyperion::reload1, 1);
+		if (!isFolia) {
+			Bukkit.getScheduler().runTaskLater(getPlugin(), Hyperion::reload1, 1);
 			sender.sendMessage(ChatColor.GRAY + "[Hyperion]" + ChatColor.RED + ChatColor.ITALIC + " Bukkit" + ChatColor.RESET + ChatColor.RED + " Config reloaded");
 		}
 
 		if (isFolia || luminol) {
-			Bukkit.getGlobalRegionScheduler().runDelayed(Hyperion.getPlugin(), Hyperion::reload, 1);
+			scheduler.global().runDelayed(task -> {
+				Hyperion.reload();
+				return null;
+			}, 1L);
 			sender.sendMessage(ChatColor.GRAY + "[Hyperion]" + ChatColor.RED + ChatColor.ITALIC + " Folia" + ChatColor.RESET + ChatColor.RED + " Config reloaded");
 		}
 
 	}
+
 
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onAbilityStart(final AbilityStartEvent event) {
