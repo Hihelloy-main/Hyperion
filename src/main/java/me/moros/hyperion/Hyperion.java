@@ -167,7 +167,7 @@ public class Hyperion extends JavaPlugin {
 		}
 
 		if (isFolia || luminol) {
-			scheduler.global().cancelTasks();
+			scheduler.async().cancelTasks();
 		}
 	}
 
@@ -237,5 +237,9 @@ public class Hyperion extends JavaPlugin {
 
 	public static boolean isSpigot() {
 		return spigot;
+	}
+
+	public static ServerImplementation getScheduler() {
+		return scheduler;
 	}
 }

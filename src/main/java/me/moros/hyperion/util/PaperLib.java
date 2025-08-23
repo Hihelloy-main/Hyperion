@@ -11,16 +11,17 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import java.util.concurrent.CompletableFuture;
 
 public class PaperLib {
-    private static final Environment ENVIRONMENT;
+    private static Environment ENVIRONMENT;
 
     static {
         if (Hyperion.isFolia()) {
             ENVIRONMENT = new Folia();
         } else if (Hyperion.isPaper()) {
             ENVIRONMENT = new Paper();
-        } else {
+            } else if (Hyperion.isSpigot()) {
             ENVIRONMENT = new Spigot();
         }
+
     }
 
     public static CompletableFuture<Chunk> getChunkAtAsync(Location location) {

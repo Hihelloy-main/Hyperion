@@ -22,10 +22,14 @@ package me.moros.hyperion.commands;
 import com.projectkorra.projectkorra.command.PKCommand;
 import me.moros.hyperion.Hyperion;
 import me.moros.hyperion.configuration.ConfigManager;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
+
+import static me.moros.hyperion.Hyperion.isFolia;
+import static me.moros.hyperion.Hyperion.scheduler;
 
 public class HyperionCommand extends PKCommand {
 	public HyperionCommand() {
@@ -40,9 +44,14 @@ public class HyperionCommand extends PKCommand {
 			sender.sendMessage(ChatColor.GREEN + "Developed by: " + ChatColor.RED + Hyperion.getAuthor());
 		} else if (args.size() == 1) {
 			if (args.get(0).equals("reload") && hasPermission(sender, "reload")) {
-				Hyperion.getPlugin().reloadConfig();
-				ConfigManager.modifiersConfig.reloadConfig();
-				sender.sendMessage(ChatColor.GREEN + "Hyperion config has been reloaded.");
+				if (isFolia) {
+					scheduler.global().run(Hyperion::reload);
+					sender.sendMessage(ChatColor.GREEN + "Hyperion config has been reloaded.");
+				}
+				if (!isFolia) {
+					Bukkit.getScheduler().runTask(Hyperion.plugin, Hyperion::reload1);
+					sender.sendMessage(ChatColor.GREEN + "Hyperion config has been reloaded.");
+				}
 			}
 		}
 	}

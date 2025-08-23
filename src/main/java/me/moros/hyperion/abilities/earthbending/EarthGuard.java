@@ -31,7 +31,6 @@ import com.projectkorra.projectkorra.util.TempBlock;
 import com.projectkorra.projectkorra.util.TempPotionEffect;
 import me.moros.hyperion.Hyperion;
 import me.moros.hyperion.util.BendingFallingBlock;
-import me.moros.hyperion.util.PotionMetaUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.GameMode;
@@ -40,6 +39,7 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -60,6 +60,7 @@ public class EarthGuard extends EarthAbility implements AddonAbility {
 	private BendingFallingBlock armorFallingBlock;
 	private BlockData blockData;
 	private GameMode originalMode;
+	private static Entity entity;
 
 	@Attribute(Attribute.COOLDOWN)
 	private long cooldown;
@@ -111,14 +112,13 @@ public class EarthGuard extends EarthAbility implements AddonAbility {
 		}
 	}
 
-	@Override
 	public void progress() {
 		if (!formed) {
 			if (!bPlayer.canBendIgnoreBindsCooldowns(this)) {
 				remove();
 				return;
 			}
-			moveBlock();
+			moveBlock(entity);
 		} else {
 			if (!canRemainActive()) {
 				remove();
@@ -154,7 +154,7 @@ public class EarthGuard extends EarthAbility implements AddonAbility {
 		return true;
 	}
 
-	private void formArmor(Material material) {
+	private void formArmor(Material material, Object entity) {
 		if (formed) return;
 
 		final ItemStack head, chest, leggings, boots;
@@ -213,7 +213,7 @@ public class EarthGuard extends EarthAbility implements AddonAbility {
 		formed = true;
 	}
 
-	private void moveBlock() {
+	private void moveBlock(Object entity) {
 		if (!player.getWorld().equals(armorFallingBlock.getFallingBlock().getWorld())) {
 			remove();
 			return;
@@ -235,7 +235,7 @@ public class EarthGuard extends EarthAbility implements AddonAbility {
 		if (distanceSquared <= 0.5 * 0.5) {
 			Material mat = armorFallingBlock.getFallingBlock().getBlockData().getMaterial();
 			armorFallingBlock.remove();
-			formArmor(mat);
+			formArmor(mat, entity);
 			return;
 		}
 
