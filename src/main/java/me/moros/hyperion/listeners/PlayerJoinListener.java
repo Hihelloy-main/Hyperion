@@ -36,8 +36,13 @@ public class PlayerJoinListener implements Listener {
             player.sendMessage(ChatColor.GRAY + "You're running: " + ChatColor.RED + current);
             player.sendMessage(ChatColor.GRAY + "Latest version: " + ChatColor.GREEN + latest);
             player.sendMessage(ChatColor.GRAY + "Download: " + ChatColor.UNDERLINE + ChatColor.BLUE + "https://github.com/Hihelloy-main/Hyperion");
+
         } else {
+            String latest = checker.getLatestVersion() != null ? checker.getLatestVersion() : "unknown";
+
             player.sendMessage(HexColor.ORANGE + "[Hyperion] " + ChatColor.RESET + ChatColor.GREEN + "No updates available. You're on the latest version.");
+            player.sendMessage(ChatColor.GRAY + "Latest GitHub version: " + ChatColor.GREEN + latest);
         }
+
     }
 }

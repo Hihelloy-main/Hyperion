@@ -23,7 +23,7 @@ dependencies {
     // Provided by server
     compileOnly("org.spigotmc:spigot-api:1.20.2-R0.1-SNAPSHOT")
     compileOnly("org.jetbrains:annotations:26.0.2")
-    compileOnly("com.projectkorra:projectkorra:1.12.0")
+    compileOnly("com.projectkorra:projectkorra:1.12.1-PRE-RELEASE-1")
 
     // Included in plugin jar
     implementation("org.bstats:bstats-bukkit:3.1.0")
