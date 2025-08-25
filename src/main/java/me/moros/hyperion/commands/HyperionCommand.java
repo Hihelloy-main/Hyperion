@@ -22,6 +22,7 @@ package me.moros.hyperion.commands;
 import com.projectkorra.projectkorra.command.PKCommand;
 import me.moros.hyperion.Hyperion;
 import me.moros.hyperion.configuration.ConfigManager;
+import me.moros.hyperion.util.HexColor;
 import me.moros.hyperion.util.UpdateChecker;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -76,7 +77,7 @@ public class HyperionCommand extends PKCommand {
 					String current = checker.getCurrentVersion() != null ? checker.getCurrentVersion() : "unknown";
 					String latest = checker.getLatestVersion() != null ? checker.getLatestVersion() : "unknown";
 
-					sender.sendMessage(ChatColor.GREEN + "[Hyperion] A new version is available!");
+					sender.sendMessage(HexColor.ORANGE + "[Hyperion] " + "A new version is available!");
 					sender.sendMessage(ChatColor.GRAY + "You're running: " + ChatColor.RED + current);
 					sender.sendMessage(ChatColor.GRAY + "Latest version: " + ChatColor.GREEN + latest);
 					sender.sendMessage(ChatColor.GRAY + "Download: " + ChatColor.UNDERLINE + ChatColor.BLUE + "https://github.com/Hihelloy-main/Hyperion");

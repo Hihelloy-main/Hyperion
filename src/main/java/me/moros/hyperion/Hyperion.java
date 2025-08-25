@@ -20,6 +20,7 @@
 package me.moros.hyperion;
 
 
+import com.cjcrafter.foliascheduler.AsyncSchedulerImplementation;
 import com.cjcrafter.foliascheduler.FoliaCompatibility;
 import com.cjcrafter.foliascheduler.ServerImplementation;
 import com.cjcrafter.foliascheduler.TaskImplementation;
@@ -49,7 +50,7 @@ public class Hyperion extends JavaPlugin {
 	public static Hyperion plugin;
 	private static String author;
 	private static String version;
-	private static Logger log;
+	public static Logger log;
 	private static PersistentDataLayer layer;
 	public static boolean isFolia;
 	public static boolean paper;
@@ -115,6 +116,7 @@ public class Hyperion extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new AbilityListener(), this);
 		getServer().getPluginManager().registerEvents(new CoreListener(), this);
 		getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
+		ThreadUtil.runGlobalLater(Hyperion::ThreadUtil_test, 0L);
 
 		// Use appropriate scheduler depending on platform
 		if (isFolia || luminol) {
@@ -259,4 +261,8 @@ public class Hyperion extends JavaPlugin {
 	public static UpdateChecker getUpdateChecker() {
 		return getPlugin(Hyperion.class).updateChecker;
 	}
+
+	public static void ThreadUtil_test() {
+        Bukkit.getLogger().info("ThreadUtil works");
+    }
 }
