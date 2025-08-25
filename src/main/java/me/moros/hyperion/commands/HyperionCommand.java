@@ -22,9 +22,12 @@ package me.moros.hyperion.commands;
 import com.projectkorra.projectkorra.command.PKCommand;
 import me.moros.hyperion.Hyperion;
 import me.moros.hyperion.configuration.ConfigManager;
+import me.moros.hyperion.util.UpdateChecker;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -39,20 +42,49 @@ public class HyperionCommand extends PKCommand {
 	@Override
 	public void execute(CommandSender sender, List<String> args) {
 		if (!hasPermission(sender) || !correctLength(sender, args.size(), 0, 1)) return;
+
 		if (args.size() == 0) {
 			sender.sendMessage(ChatColor.GREEN + "Hyperion Version: " + ChatColor.RED + Hyperion.getVersion());
 			sender.sendMessage(ChatColor.GREEN + "Developed by: " + ChatColor.RED + Hyperion.getAuthor());
 		} else if (args.size() == 1) {
-			if (args.get(0).equals("reload") && hasPermission(sender, "reload")) {
+			String sub = args.get(0).toLowerCase();
+
+			if (sub.equals("reload") && hasPermission(sender, "reload")) {
 				if (isFolia) {
 					scheduler.global().run(Hyperion::reload);
-					sender.sendMessage(ChatColor.GREEN + "Hyperion config has been reloaded.");
-				}
-				if (!isFolia) {
+				} else {
 					Bukkit.getScheduler().runTask(Hyperion.plugin, Hyperion::reload1);
-					sender.sendMessage(ChatColor.GREEN + "Hyperion config has been reloaded.");
+				}
+				sender.sendMessage(ChatColor.GREEN + "Hyperion config has been reloaded.");
+			}
+
+
+			else if (sub.equals("checkupdate") && hasPermission(sender, "checkupdate")) {
+				UpdateChecker checker = Hyperion.getUpdateChecker();
+
+				if (checker == null) {
+					sender.sendMessage(ChatColor.RED + "Update checker not initialized.");
+					return;
+				}
+
+				if (!checker.hasChecked()) {
+					sender.sendMessage(ChatColor.GRAY + "Still checking for updates, please try again shortly.");
+					return;
+				}
+
+				if (checker.isUpdateAvailable()) {
+					String current = checker.getCurrentVersion() != null ? checker.getCurrentVersion() : "unknown";
+					String latest = checker.getLatestVersion() != null ? checker.getLatestVersion() : "unknown";
+
+					sender.sendMessage(ChatColor.GREEN + "[Hyperion] A new version is available!");
+					sender.sendMessage(ChatColor.GRAY + "You're running: " + ChatColor.RED + current);
+					sender.sendMessage(ChatColor.GRAY + "Latest version: " + ChatColor.GREEN + latest);
+					sender.sendMessage(ChatColor.GRAY + "Download: " + ChatColor.UNDERLINE + ChatColor.BLUE + "https://github.com/Hihelloy-main/Hyperion");
+				} else {
+					sender.sendMessage(ChatColor.GREEN + "You're running the latest version of Hyperion.");
 				}
 			}
 		}
 	}
+
 }

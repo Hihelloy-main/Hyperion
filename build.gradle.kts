@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "me.moros"
-version = "1.7.5-PRE-RELEASE-1"
+version = "1.7.5-PRE-RELEASE-2"
 
 java {
     toolchain {
@@ -23,7 +23,7 @@ dependencies {
     // Provided by server
     compileOnly("org.spigotmc:spigot-api:1.20.2-R0.1-SNAPSHOT")
     compileOnly("org.jetbrains:annotations:26.0.2")
-    compileOnly("com.projectkorra:projectkorra:1.12.1-PRE-RELEASE-1")
+    compileOnly("com.projectkorra:projectkorra:1.12.0")
 
     // Included in plugin jar
     implementation("org.bstats:bstats-bukkit:3.1.0")

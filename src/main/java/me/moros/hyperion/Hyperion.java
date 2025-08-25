@@ -22,6 +22,7 @@ package me.moros.hyperion;
 
 import com.cjcrafter.foliascheduler.FoliaCompatibility;
 import com.cjcrafter.foliascheduler.ServerImplementation;
+import com.cjcrafter.foliascheduler.TaskImplementation;
 import com.cjcrafter.foliascheduler.util.ReflectionUtil;
 import com.projectkorra.projectkorra.BendingPlayer;
 import me.moros.hyperion.abilities.Elements.FireAbility;
@@ -29,12 +30,16 @@ import me.moros.hyperion.commands.HyperionCommand;
 import me.moros.hyperion.configuration.ConfigManager;
 import me.moros.hyperion.listeners.AbilityListener;
 import me.moros.hyperion.listeners.CoreListener;
+import me.moros.hyperion.listeners.PlayerJoinListener;
 import me.moros.hyperion.methods.CoreMethods;
 import me.moros.hyperion.util.*;
 import org.bstats.bukkit.Metrics;;
+import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.function.Consumer;
 import java.util.logging.Logger;
 
 import static com.projectkorra.projectkorra.util.TempFallingBlock.get;
@@ -52,6 +57,7 @@ public class Hyperion extends JavaPlugin {
 	public static boolean spigot;
 	private PotionEffectAdapter potionEffectAdapter;
 	public static ServerImplementation scheduler;
+	private static UpdateChecker updateChecker;
 
 
 	@Override
@@ -93,7 +99,13 @@ public class Hyperion extends JavaPlugin {
 		new ConfigManager();
 		new HyperionCommand();
 		new Elements();
-		getLogger().info("Initialized Hyperion Elements/Configs/Commands/Metrics");
+		updateChecker = new UpdateChecker(this, "Hihelloy-main/Hyperion");
+		if (isFolia) {
+			scheduler.global().execute(() -> updateChecker.checkForUpdate());
+		} else {
+			Bukkit.getScheduler().runTaskAsynchronously(this, () -> updateChecker.checkForUpdate());
+		}
+		getLogger().info("Initialized Hyperion Elements/Configs/Commands/Metrics/UpdateChecker");
 		getLogger().info("Attempting to load PaperLib");
 		new PaperLib();
 		layer = new PersistentDataLayer();
@@ -102,6 +114,7 @@ public class Hyperion extends JavaPlugin {
 
 		getServer().getPluginManager().registerEvents(new AbilityListener(), this);
 		getServer().getPluginManager().registerEvents(new CoreListener(), this);
+		getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
 
 		// Use appropriate scheduler depending on platform
 		if (isFolia || luminol) {
@@ -241,5 +254,9 @@ public class Hyperion extends JavaPlugin {
 
 	public static ServerImplementation getScheduler() {
 		return scheduler;
+	}
+
+	public static UpdateChecker getUpdateChecker() {
+		return getPlugin(Hyperion.class).updateChecker;
 	}
 }
