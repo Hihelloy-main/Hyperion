@@ -17,7 +17,7 @@ public class Elements {
     }
 
     static {
-        RAINBOWFIRE = new SubElement("RainbowFire", Element.FIRE, ElementType.BENDING, ProjectKorra.plugin){
+        RAINBOWFIRE = new SubElement("RainbowFire", Element.FIRE, ElementType.BENDING, ProjectKorra.plugin) {
             @Override
             public ChatColor getColor() {
                 return HexColor.ORANGE;

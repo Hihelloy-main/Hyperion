@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "me.moros"
-version = "1.7.5-PRE-RELEASE-2"
+version = "1.7.5"
 
 java {
     toolchain {
@@ -23,11 +23,12 @@ dependencies {
     // Provided by server
     compileOnly("org.spigotmc:spigot-api:1.20.2-R0.1-SNAPSHOT")
     compileOnly("org.jetbrains:annotations:26.0.2")
-    compileOnly("com.projectkorra:projectkorra:1.12.1-PRE-RELEASE-1")
+    compileOnly("com.projectkorra:projectkorra:1.12.0")
 
     // Included in plugin jar
     implementation("org.bstats:bstats-bukkit:3.1.0")
     implementation("com.cjcrafter:foliascheduler:0.7.2")
+    implementation("com.github.Hihelloy-main:JedCore:2.15.1-prerelease-3")
 }
 
 tasks {

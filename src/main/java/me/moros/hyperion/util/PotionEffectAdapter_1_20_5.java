@@ -9,6 +9,8 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
 
+import java.util.Objects;
+
 public class PotionEffectAdapter_1_20_5 implements PotionEffectAdapter {
 
     @Override
@@ -18,25 +20,25 @@ public class PotionEffectAdapter_1_20_5 implements PotionEffectAdapter {
 
     @Override
     public PotionEffect getSlownessEffect(int duration, int strength) {
-        return new PotionEffect(PotionEffectType.getByName("SLOWNESS"), duration / 50, strength - 1);
+        return new PotionEffect(Objects.requireNonNull(PotionEffectType.getByName("SLOWNESS")), duration / 50, strength - 1);
     }
 
     @Override
     public PotionEffect getResistanceEffect(int duration, int strength) {
-        return new PotionEffect(PotionEffectType.getByName("RESISTANCE"), duration / 50, strength - 1);
+        return new PotionEffect(Objects.requireNonNull(PotionEffectType.getByName("RESISTANCE")), duration / 50, strength - 1);
     }
 
     @Override
     public PotionEffect getNauseaEffect(int duration) {
-        return new PotionEffect(PotionEffectType.getByName("NAUSEA"), duration / 50, 1);
+        return new PotionEffect(Objects.requireNonNull(PotionEffectType.getByName("NAUSEA")), duration / 50, 1);
     }
 
     @Override
     public void applyJumpBoost(Player player, int duration, int strength) {
-        if (player.hasPotionEffect(PotionEffectType.getByName("JUMP_BOOST"))) {
-            player.removePotionEffect(PotionEffectType.getByName("JUMP_BOOST"));
+        if (player.hasPotionEffect(Objects.requireNonNull(PotionEffectType.getByName("JUMP_BOOST")))) {
+            player.removePotionEffect(Objects.requireNonNull(PotionEffectType.getByName("JUMP_BOOST")));
         }
-        player.addPotionEffect(new PotionEffect(PotionEffectType.getByName("JUMP_BOOST"), duration / 50, strength - 1));
+        player.addPotionEffect(new PotionEffect(Objects.requireNonNull(PotionEffectType.getByName("JUMP_BOOST")), duration / 50, strength - 1));
     }
 
     @Override

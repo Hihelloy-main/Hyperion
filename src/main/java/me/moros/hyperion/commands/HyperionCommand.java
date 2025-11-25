@@ -68,7 +68,7 @@ public class HyperionCommand extends PKCommand {
 					return;
 				}
 
-				if (!checker.hasChecked()) {
+                if (!checker.hasChecked()) {
 					sender.sendMessage(ChatColor.GRAY + "Still checking for updates, please try again shortly.");
 					return;
 				}

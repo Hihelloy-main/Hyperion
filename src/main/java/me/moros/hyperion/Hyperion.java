@@ -25,7 +25,11 @@ import com.cjcrafter.foliascheduler.FoliaCompatibility;
 import com.cjcrafter.foliascheduler.ServerImplementation;
 import com.cjcrafter.foliascheduler.TaskImplementation;
 import com.cjcrafter.foliascheduler.util.ReflectionUtil;
+import com.jedk1.jedcore.JedCore;
+import com.jedk1.jedcore.ability.waterbending.combo.WaterGimbal;
 import com.projectkorra.projectkorra.BendingPlayer;
+import com.projectkorra.projectkorra.util.TempBlock;
+import com.projectkorra.projectkorra.util.TempFallingBlock;
 import me.moros.hyperion.abilities.Elements.FireAbility;
 import me.moros.hyperion.commands.HyperionCommand;
 import me.moros.hyperion.configuration.ConfigManager;
@@ -37,8 +41,10 @@ import me.moros.hyperion.util.*;
 import org.bstats.bukkit.Metrics;;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
+import org.bukkit.entity.FallingBlock;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 import java.util.logging.Logger;
@@ -101,6 +107,7 @@ public class Hyperion extends JavaPlugin {
 		new HyperionCommand();
 		new Elements();
 		updateChecker = new UpdateChecker(this, "Hihelloy-main/Hyperion");
+
 		if (isFolia) {
 			scheduler.global().execute(() -> updateChecker.checkForUpdate());
 		} else {
@@ -174,6 +181,8 @@ public class Hyperion extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
+		TempFallingBlock.removeAllFallingBlocks();
+		TempBlock.removeAll();
 		BendingFallingBlock.removeAll();
 		TempArmorStand.removeAll();
 
@@ -182,7 +191,7 @@ public class Hyperion extends JavaPlugin {
 		}
 
 		if (isFolia || luminol) {
-			scheduler.async().cancelTasks();
+			scheduler.global().cancelTasks();
 		}
 	}
 
@@ -259,10 +268,11 @@ public class Hyperion extends JavaPlugin {
 	}
 
 	public static UpdateChecker getUpdateChecker() {
-		return getPlugin(Hyperion.class).updateChecker;
+        return updateChecker;
 	}
 
 	public static void ThreadUtil_test() {
         Bukkit.getLogger().info("ThreadUtil works");
     }
+
 }

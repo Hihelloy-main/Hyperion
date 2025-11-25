@@ -32,8 +32,8 @@ public class PaperLib {
         return ENVIRONMENT.getChunkAtAsync(block);
     }
 
-    public static CompletableFuture<Boolean> teleportAsync(Entity entity, Location location) {
-        return ENVIRONMENT.teleportAsync(entity, location);
+    public static void teleportAsync(Entity entity, Location location) {
+        ENVIRONMENT.teleportAsync(entity, location);
     }
 
     public static CompletableFuture<Boolean> teleportAsync(Entity entity, Location location, TeleportCause cause) {

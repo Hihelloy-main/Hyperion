@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 public class UpdateChecker {
 
     private final JavaPlugin plugin;
-    private final BukkitScheduler scheduler;
     private final String apiUrl;
 
     private boolean updateAvailable = false;
@@ -24,7 +23,6 @@ public class UpdateChecker {
 
     public UpdateChecker(JavaPlugin plugin, String repo) {
         this.plugin = plugin;
-        this.scheduler = plugin.getServer().getScheduler();
         this.apiUrl = "https://api.github.com/repos/" + repo + "/releases/latest";
     }
 

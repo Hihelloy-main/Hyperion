@@ -5,14 +5,10 @@ import org.bukkit.Location;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
+import org.bukkit.entity.Firework;
 import org.bukkit.util.Vector;
 
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.PriorityQueue;
-import java.util.Queue;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -28,7 +24,7 @@ public class BendingFallingBlock {
 	}
 
 	public BendingFallingBlock(Location location, BlockData data, Vector velocity, CoreAbility abilityInstance, boolean gravity, long delay) {
-		fallingBlock = location.getWorld().spawnFallingBlock(location, data);
+		fallingBlock = Objects.requireNonNull(location.getWorld()).spawnFallingBlock(location, data);
 		fallingBlock.setVelocity(velocity);
 		fallingBlock.setGravity(gravity);
 		fallingBlock.setDropItem(false);

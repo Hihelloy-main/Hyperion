@@ -1,5 +1,6 @@
 package me.moros.hyperion.abilities.Elements;
 
+import com.projectkorra.projectkorra.BendingPlayer;
 import com.projectkorra.projectkorra.Element;
 import com.projectkorra.projectkorra.GeneralMethods;
 import com.projectkorra.projectkorra.ProjectKorra;
@@ -196,7 +197,7 @@ public abstract class FireAbility extends ElementalAbility {
     public void playFirebendingParticles(Location loc, int amount, double xOffset, double yOffset, double zOffset) {
         if (this.getBendingPlayer().canUseSubElement(Elements.RAINBOWFIRE)) {
             // Instantiate and start the swirling rainbow fire particles task
-            RainbowFireAbility.playRainbowFireParticles(loc, player);
+            RainbowFireAbility.playRainbowFireParticles(loc, amount, xOffset, yOffset, zOffset);
         } else if (this.getBendingPlayer().canUseSubElement(SubElement.BLUE_FIRE)) {
             ParticleEffect.SOUL_FIRE_FLAME.display(loc, amount, xOffset, yOffset, zOffset);
         } else {

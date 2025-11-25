@@ -16,13 +16,18 @@ public abstract class RainbowFireAbility extends FireAbility implements SubAbili
         super(player);
     }
 
-    public static void playRainbowFireParticles(Location loc, Player player) {
-        // You can make radius/height configurable in the future if needed
-        int amount = 100; // Number of particles to spawn
+    /**
+     * Always plays rainbow fire particles (no fallback).
+     *
+     * @param loc     Location to play particles at
+     * @param amount  Number of particles
+     * @param xOffset X offset for particle spread
+     * @param yOffset Y offset for particle spread
+     * @param zOffset Z offset for particle spread
+     */
+    public static void playRainbowFireParticles(Location loc, int amount, double xOffset, double yOffset, double zOffset) {
 
-        if (loc != null && player != null && player.isOnline()) {
-            RainbowParticleEffect.spawnRainbowParticleEffect(loc, amount);
-        }
+        RainbowParticleEffect.spawnRainbowParticleEffect(loc, amount, xOffset, yOffset, zOffset);
     }
 
     @Override
@@ -37,7 +42,7 @@ public abstract class RainbowFireAbility extends FireAbility implements SubAbili
 
     public static double getDamageFactor() {
         FileConfiguration config = Hyperion.getPlugin().getConfig();
-        return config.getDouble("Properties.Fire.RainbowFire.DamageFactor", 1.0); // default fallback
+        return config.getDouble("Properties.Fire.RainbowFire.DamageFactor", 1.0);
     }
 
     public static double getCooldownFactor() {
