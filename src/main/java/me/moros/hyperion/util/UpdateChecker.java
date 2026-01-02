@@ -62,7 +62,6 @@ public class UpdateChecker {
         }
     }
 
-    // Simple version comparison: returns <0 if v1 < v2, 0 if equal, >0 if v1 > v2
     private int compareVersions(String v1, String v2) {
         String[] parts1 = v1.split("[.-]");
         String[] parts2 = v2.split("[.-]");
@@ -73,18 +72,29 @@ public class UpdateChecker {
             String p2 = i < parts2.length ? parts2[i] : "0";
 
             int cmp;
-            // Try numeric comparison
+
             try {
+                // Compare numeric parts
                 int n1 = Integer.parseInt(p1);
                 int n2 = Integer.parseInt(p2);
                 cmp = Integer.compare(n1, n2);
             } catch (NumberFormatException e) {
-                cmp = p1.compareTo(p2);
+                // Handle pre-release comparison
+                boolean isPre1 = p1.toUpperCase().startsWith("PRE");
+                boolean isPre2 = p2.toUpperCase().startsWith("PRE");
+
+                if (isPre1 && !isPre2) {
+                    cmp = -1; // pre-release is older than stable
+                } else if (!isPre1 && isPre2) {
+                    cmp = 1;  // stable is newer than pre-release
+                } else if (isPre1 && isPre2) {
+                    cmp = p1.compareTo(p2); // compare pre-releases lexically
+                } else {
+                    cmp = p1.compareTo(p2); // fallback string compare
+                }
             }
 
-            if (cmp != 0) {
-                return cmp;
-            }
+            if (cmp != 0) return cmp;
         }
 
         return 0;
