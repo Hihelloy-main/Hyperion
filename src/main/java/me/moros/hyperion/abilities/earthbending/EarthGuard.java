@@ -31,6 +31,7 @@ import com.projectkorra.projectkorra.util.TempBlock;
 import com.projectkorra.projectkorra.util.TempPotionEffect;
 import me.moros.hyperion.Hyperion;
 import me.moros.hyperion.util.BendingFallingBlock;
+import me.moros.hyperion.util.PotionEffectAdapter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
@@ -212,7 +213,7 @@ public class EarthGuard extends EarthAbility implements AddonAbility {
 
 		originalMode = player.getGameMode();
 		player.getInventory().setArmorContents(newArmor.toArray(new ItemStack[4]));
-	new TempPotionEffect(player, new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, NumberConversions.round(duration / 50F), resistance));
+	new TempPotionEffect(player, Hyperion.plugin.getPotionEffectAdapter().getResistanceEffect(NumberConversions.round(duration / 50F), resistance));
 		time = System.currentTimeMillis();
 		formed = true;
 	}
