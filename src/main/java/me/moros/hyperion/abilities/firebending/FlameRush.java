@@ -33,6 +33,7 @@ import me.moros.hyperion.Hyperion;
 import me.moros.hyperion.abilities.Elements.FireAbility;
 import me.moros.hyperion.methods.CoreMethods;
 import me.moros.hyperion.util.BendingFallingBlock;
+import me.moros.hyperion.util.ThreadUtil;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -292,12 +293,12 @@ public class FlameRush extends FireAbility implements AddonAbility {
 						.distinct().toList();
 				smash.remove();
 				if (!smashBlocks.isEmpty()) {
-					ProjectKorra.plugin.getServer().getScheduler().runTaskLater(ProjectKorra.plugin, () -> {
-						for (Location loc : smashBlocks) {
+					for (Location loc : smashBlocks) {
+						ThreadUtil.ensureLocationLater(loc, () -> {
 							Vector vel = CoreMethods.gaussianVector(0.2, 0.1, 0.2);
 							new BendingFallingBlock(loc, Material.MAGMA_BLOCK.createBlockData(), vel, this, true, 5000);
-						}
-					}, 1);
+						}, 1);
+					}
 				}
 			} else {
 				collision.setRemovingSecond(false);
