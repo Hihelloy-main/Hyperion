@@ -31,7 +31,6 @@ public class Evade extends AirAbility implements AddonAbility {
 	private Vector direction;
 
 	private long cooldown;
-	private Hyperion pl;
 
 
 	private double angleStep;
@@ -42,7 +41,7 @@ public class Evade extends AirAbility implements AddonAbility {
 		super(player);
 
 		if (!player.isOnGround() || player.getEyeLocation().getBlock().isLiquid() || hasAbility(player, Evade.class) || !bPlayer.canBend(this)) {
-			pl.getServer().getLogger().info("Player Can't bend ability Evade because they are either not on the ground or they can't bend");
+			Hyperion.plugin.getServer().getLogger().info("Player Can't bend ability Evade because they are either not on the ground or they can't bend");
 			return;
 		}
 
