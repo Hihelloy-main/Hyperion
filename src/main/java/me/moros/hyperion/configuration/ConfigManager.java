@@ -19,6 +19,7 @@
 
 package me.moros.hyperion.configuration;
 
+import com.cjcrafter.foliascheduler.folia.FoliaTask;
 import me.moros.hyperion.Hyperion;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;

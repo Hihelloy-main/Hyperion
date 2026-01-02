@@ -31,7 +31,9 @@ import com.projectkorra.projectkorra.util.TempBlock;
 import com.projectkorra.projectkorra.util.TempPotionEffect;
 import me.moros.hyperion.Hyperion;
 import me.moros.hyperion.util.BendingFallingBlock;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Color;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -189,8 +191,10 @@ public class EarthGuard extends EarthAbility implements AddonAbility {
 			if (generalMeta instanceof LeatherArmorMeta meta) {
 				meta.setColor(color);
 			}
-			generalMeta.setDisplayName(ChatColor.GREEN + "Earth Guard Armor");
-			generalMeta.setLore(Collections.singletonList(ChatColor.DARK_GREEN + "Temporary"));
+			generalMeta.setDisplayName(toLegacy(
+					Component.text("Earth Guard Armor", NamedTextColor.GREEN)
+			));
+			generalMeta.setLore(Collections.singletonList(toLegacy(Component.text("Temporary", NamedTextColor.DARK_GREEN))));
 			Hyperion.getLayer().addEarthGuardKey(generalMeta);
 			item.setItemMeta(generalMeta);
 		}
@@ -343,4 +347,9 @@ public class EarthGuard extends EarthAbility implements AddonAbility {
 	@Override
 	public void stop() {
 	}
+
+	public static String toLegacy(Component component) {
+		return LegacyComponentSerializer.legacySection().serialize(component);
+	}
+
 }

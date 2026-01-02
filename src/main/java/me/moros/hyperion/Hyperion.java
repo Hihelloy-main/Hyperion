@@ -20,13 +20,8 @@
 package me.moros.hyperion;
 
 
-import com.cjcrafter.foliascheduler.AsyncSchedulerImplementation;
 import com.cjcrafter.foliascheduler.FoliaCompatibility;
 import com.cjcrafter.foliascheduler.ServerImplementation;
-import com.cjcrafter.foliascheduler.TaskImplementation;
-import com.cjcrafter.foliascheduler.util.ReflectionUtil;
-import com.jedk1.jedcore.JedCore;
-import com.jedk1.jedcore.ability.waterbending.combo.WaterGimbal;
 import com.projectkorra.projectkorra.BendingPlayer;
 import com.projectkorra.projectkorra.util.TempBlock;
 import com.projectkorra.projectkorra.util.TempFallingBlock;
@@ -38,6 +33,7 @@ import me.moros.hyperion.listeners.CoreListener;
 import me.moros.hyperion.listeners.PlayerJoinListener;
 import me.moros.hyperion.methods.CoreMethods;
 import me.moros.hyperion.util.*;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bstats.bukkit.Metrics;;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
@@ -65,6 +61,7 @@ public class Hyperion extends JavaPlugin {
 	private PotionEffectAdapter potionEffectAdapter;
 	public static ServerImplementation scheduler;
 	private static UpdateChecker updateChecker;
+    private BukkitAudiences adventure;
 
 
 	@Override
@@ -74,6 +71,7 @@ public class Hyperion extends JavaPlugin {
 		log = getLogger();
 		version = getDescription().getVersion();
 		author = getDescription().getAuthors().get(0);
+        this.adventure = BukkitAudiences.create(this);
 		try {
 			Class.forName("io.papermc.paper.threadedregions.RegionizedServer");
 			isFolia = true;
@@ -108,11 +106,7 @@ public class Hyperion extends JavaPlugin {
 		new Elements();
 		updateChecker = new UpdateChecker(this, "Hihelloy-main/Hyperion");
 
-		if (isFolia) {
-			scheduler.global().execute(() -> updateChecker.checkForUpdate());
-		} else {
-			Bukkit.getScheduler().runTaskAsynchronously(this, () -> updateChecker.checkForUpdate());
-		}
+        ThreadUtil.runAsync(() -> updateChecker.checkForUpdate());
 		getLogger().info("Initialized Hyperion Elements/Configs/Commands/Metrics/UpdateChecker");
 		getLogger().info("Attempting to load PaperLib");
 		new PaperLib();
@@ -123,51 +117,23 @@ public class Hyperion extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new AbilityListener(), this);
 		getServer().getPluginManager().registerEvents(new CoreListener(), this);
 		getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
-		ThreadUtil.runGlobalLater(Hyperion::ThreadUtil_test, 0L);
 
-		// Use appropriate scheduler depending on platform
-		if (isFolia || luminol) {
-			scheduler.global().runAtFixedRate(task -> {
-				manage();
-				return null;
-			}, 1L, 5L);
+        ThreadUtil.runGlobalTimer(() -> {
+            manage();
+        }, 1L, 5L);
 
-			scheduler.global().runAtFixedRate(task -> {
-				TempArmorStand.manage();
-				return null;
-			}, 1L, 1L);
+        ThreadUtil.runGlobalTimer(() -> {
+            TempArmorStand.manage();
+        }, 1L, 1L);
 
-			scheduler.global().runAtFixedRate(task -> {
-				BendingFallingBlock.manage();
-				return null;
-			}, 1L, 5L);
+        ThreadUtil.runGlobalTimer(() -> {
+            BendingFallingBlock.manage();
+        }, 1L, 5L);
 
-			scheduler.global().runAtFixedRate(task -> {
-				FireAbility.getAbilities();
-				return null;
-			}, 1L, 5L);
-		} else {
-			new BukkitRunnable() {
-				@Override
-				public void run() {
-					manage();
-				}
-			}.runTaskTimer(this, 0L, 5L);
+        ThreadUtil.runGlobalTimer(() -> {
+            FireAbility.getAbilities();
+        }, 1L, 5L);
 
-			new BukkitRunnable() {
-				@Override
-				public void run() {
-					TempArmorStand.manage();
-				}
-			}.runTaskTimer(this, 0L, 1L);
-
-			new BukkitRunnable() {
-				@Override
-				public void run() {
-					BendingFallingBlock.manage();
-				}
-			}.runTaskTimer(this, 0L, 5L);
-		}
 
 		PotionEffectAdapterFactory potionEffectAdapterFactory = new PotionEffectAdapterFactory();
 		potionEffectAdapter = potionEffectAdapterFactory.getAdapter();
@@ -192,18 +158,14 @@ public class Hyperion extends JavaPlugin {
 
 		if (isFolia || luminol) {
 			scheduler.global().cancelTasks();
+            scheduler.async().cancelTasks();
+            scheduler.cancelTasks();
 		}
-	}
 
-	public static void reload1() {
-		Hyperion.getPlugin().reloadConfig();
-		ConfigManager.modifiersConfig.reloadConfig();
-		BendingFallingBlock.removeAll();
-		TempArmorStand.removeAll();
-		CoreMethods.loadAbilities();
-		new HyperionCommand();
-		getLog().info("Trying to initialize commands once more");
-		getLog().info("Hyperion BUKKIT Reloaded.");
+        if (this.adventure != null) {
+            this.adventure.close();
+            this.adventure = null;
+        }
 	}
 
 	public static void reload() {
@@ -212,9 +174,13 @@ public class Hyperion extends JavaPlugin {
 		BendingFallingBlock.removeAll();
 		TempArmorStand.removeAll();
 		CoreMethods.loadAbilities();
-		new HyperionCommand();
 		getLog().info("Trying to initialize commands once more");
-		getLog().info("Hyperion FOLIA Reloaded.");
+		try {
+			new HyperionCommand();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		getLog().info("Hyperion Reloaded.");
 	}
 
 	public static void checkMaintainer() {
@@ -271,8 +237,12 @@ public class Hyperion extends JavaPlugin {
         return updateChecker;
 	}
 
-	public static void ThreadUtil_test() {
-        Bukkit.getLogger().info("ThreadUtil works");
+    @NotNull
+    public BukkitAudiences adventure() {
+        if (this.adventure == null) {
+            throw new IllegalStateException("Tried to access Adventure when the plugin was disabled!");
+        }
+        return this.adventure;
     }
 
 }

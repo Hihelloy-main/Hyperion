@@ -17,18 +17,20 @@ repositories {
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
     maven("https://jitpack.io")
     maven("https://repo.papermc.io/repository/maven-public/")
+    mavenLocal()
 }
 
 dependencies {
     // Provided by server
     compileOnly("org.spigotmc:spigot-api:1.20.2-R0.1-SNAPSHOT")
     compileOnly("org.jetbrains:annotations:26.0.2")
-    compileOnly("com.projectkorra:projectkorra:1.12.0")
+    compileOnly("com.projectkorra:projectkorra:1.12.1-PRE-RELEASE-1")
 
     // Included in plugin jar
     implementation("org.bstats:bstats-bukkit:3.1.0")
     implementation("com.cjcrafter:foliascheduler:0.7.2")
-    implementation("com.github.Hihelloy-main:JedCore:2.15.1-prerelease-3")
+    implementation("net.kyori:adventure-api:4.26.1")
+    implementation("net.kyori:adventure-platform-bukkit:4.4.1")
 }
 
 tasks {
@@ -40,6 +42,8 @@ tasks {
 
         // Relocate FoliaScheduler to avoid classpath issues
         relocate("com.cjcrafter.foliascheduler", "me.moros.hyperion.foliascheduler")
+
+        //relocate("io.papermc.paperlib", "me.moros.hyperion.paperlib")
 
     }
 

@@ -115,7 +115,7 @@ public class TempArmorStand {
 				continue;
 			}
 
-			// ✅ USE ThreadUtil to handle Folia, Paper, and Bukkit cases
+
 			Location loc = tas.armorStand.getLocation();
 			ThreadUtil.ensureLocation(loc, tas::remove);
 		}

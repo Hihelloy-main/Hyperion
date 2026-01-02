@@ -19,9 +19,12 @@
 
 package me.moros.hyperion.listeners;
 
-import com.cjcrafter.foliascheduler.folia.FoliaTask;
+
 import com.projectkorra.projectkorra.BendingPlayer;
 import com.projectkorra.projectkorra.ability.CoreAbility;
+import com.projectkorra.projectkorra.attribute.AttributeModification;
+import com.projectkorra.projectkorra.attribute.AttributeModifier;
+import com.projectkorra.projectkorra.event.AbilityRecalculateAttributeEvent;
 import com.projectkorra.projectkorra.event.AbilityStartEvent;
 import com.projectkorra.projectkorra.event.BendingReloadEvent;
 import me.moros.hyperion.Hyperion;
@@ -34,6 +37,12 @@ import me.moros.hyperion.abilities.earthbending.passive.Locksmithing;
 import me.moros.hyperion.configuration.ConfigManager;
 import me.moros.hyperion.methods.CoreMethods;
 import me.moros.hyperion.util.BendingFallingBlock;
+import me.moros.hyperion.util.ThreadUtil;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TranslatableComponent;
 import org.bukkit.*;
@@ -205,19 +214,15 @@ public class CoreListener implements Listener {
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPKReload(final BendingReloadEvent event) {
 		final CommandSender sender = event.getSender();
-		if (!isFolia) {
-			Bukkit.getScheduler().runTaskLater(getPlugin(), Hyperion::reload1, 1);
-			sender.sendMessage(ChatColor.GRAY + "[Hyperion]" + ChatColor.RED + ChatColor.ITALIC + " Bukkit" + ChatColor.RESET + ChatColor.RED + " Config reloaded");
-		}
-
-		if (isFolia || luminol) {
-			scheduler.global().runDelayed(task -> {
-				Hyperion.reload();
-				return null;
-			}, 1L);
-			sender.sendMessage(ChatColor.GRAY + "[Hyperion]" + ChatColor.RED + ChatColor.ITALIC + " Folia" + ChatColor.RESET + ChatColor.RED + " Config reloaded");
-		}
-
+        ThreadUtil.runGlobalLater(Hyperion::reload, 1);
+		plugin.adventure().sender(sender).sendMessage(
+				Component.text("[Hyperion]", NamedTextColor.GRAY)
+						.append(Component.space())
+						.append(
+								Component.text("Config reloaded", NamedTextColor.RED)
+										.decorate(TextDecoration.ITALIC)
+						)
+		);
 	}
 
 
@@ -236,6 +241,15 @@ public class CoreListener implements Listener {
 		}
 	}
 
+    @EventHandler(priority = EventPriority.LOW)
+    public void onAbilityRecalculateAttribute(AbilityRecalculateAttributeEvent event) {
+        if (CoreMethods.HassetAttributesbeencalled) {
+            NamespacedKey key = new NamespacedKey(Hyperion.getPlugin(), CoreMethods.key1);
+            event.addModification(AttributeModification.of(AttributeModifier.SET, CoreMethods.value1, key));
+            log.info("Recalculated Ability Attribute");
+        }
+    }
+
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void onBlockBreak(BlockBreakEvent event) {
 		Player player = event.getPlayer();
@@ -245,7 +259,7 @@ public class CoreListener implements Listener {
 			if (name == null) {
 				name = "Container";
 			}
-			player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TranslatableComponent("container.isLocked", name));
+			plugin.adventure().player(player).sendActionBar(Component.translatable("container.isLocked", Component.text(name)));
 			Location loc = block.getLocation().add(0.5, 0.5, 0.5);
 			block.getWorld().playSound(loc, Sound.BLOCK_CHEST_LOCKED, 1, 1);
 			event.setCancelled(true);

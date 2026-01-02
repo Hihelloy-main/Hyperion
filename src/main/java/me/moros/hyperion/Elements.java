@@ -20,7 +20,7 @@ public class Elements {
         RAINBOWFIRE = new SubElement("RainbowFire", Element.FIRE, ElementType.BENDING, ProjectKorra.plugin) {
             @Override
             public ChatColor getColor() {
-                return HexColor.ORANGE;
+                return ChatColor.of("#FF7F00");
             }
         };
     }

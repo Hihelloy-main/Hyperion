@@ -90,7 +90,7 @@ public class UpdateChecker {
         return 0;
     }
 
-    // Naive JSON parser for one-level field (for simplicity, you might want to use a proper JSON lib)
+
     private String parseJsonField(String json, String field) {
         String search = "\"" + field + "\":\"";
         int index = json.indexOf(search);
