@@ -242,7 +242,6 @@ public class CoreMethods {
 
 	public static void setAttributes(ConfigurationSection section, CoreAbility ability) {
 		for (String key : section.getKeys(false)) {
-            HassetAttributesbeencalled = true;
 			Number value;
 			if (section.isInt(key)) {
 				value = section.getInt(key);
@@ -253,6 +252,7 @@ public class CoreMethods {
 			} else {
 				continue;
 			}
+			HassetAttributesbeencalled = true;
             value1 = value;
             key1 = key;
             // Deprecated - PK 1.12.0

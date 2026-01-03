@@ -213,7 +213,7 @@ public class EarthGuard extends EarthAbility implements AddonAbility {
 
 		originalMode = player.getGameMode();
 		player.getInventory().setArmorContents(newArmor.toArray(new ItemStack[4]));
-	new TempPotionEffect(player, Hyperion.plugin.getPotionEffectAdapter().getResistanceEffect(NumberConversions.round(duration / 50F), resistance));
+	new TempPotionEffect(player, Hyperion.plugin.getPotionEffectAdapter().getResistanceEffect(NumberConversions.round(duration), resistance));
 		time = System.currentTimeMillis();
 		formed = true;
 	}

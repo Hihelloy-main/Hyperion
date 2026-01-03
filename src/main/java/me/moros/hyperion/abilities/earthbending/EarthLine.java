@@ -264,7 +264,7 @@ public class EarthLine extends EarthAbility implements AddonAbility {
 				new TempArmorStand(this, loc.add(0, -0.6, 0), material, prisonDuration, true);
 			}
 			final MovementHandler mh = new MovementHandler(target, CoreAbility.getAbility(EarthLine.class));
-			mh.stopWithDuration(prisonDuration / 50, Element.EARTH.getColor() + "* Imprisoned *");
+			mh.stopWithDuration(prisonDuration, Element.EARTH.getColor() + "* Imprisoned *");
 			remove();
 		}
 	}

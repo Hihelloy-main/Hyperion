@@ -212,7 +212,7 @@ public class IceCrawl extends IceAbility implements AddonAbility {
 					new BendingFallingBlock(entity.getLocation().clone().add(0, -0.2, 0),
 							Material.PACKED_ICE.createBlockData(),
 							new Vector(), this, false, duration);
-					new TempPotionEffect((LivingEntity) entity, Hyperion.plugin.getPotionEffectAdapter().getSlownessEffect(NumberConversions.round(duration / 50F), 5));
+					new TempPotionEffect((LivingEntity) entity, Hyperion.plugin.getPotionEffectAdapter().getSlownessEffect(NumberConversions.round(duration), 5));
 				}
 
 				hit = true;
