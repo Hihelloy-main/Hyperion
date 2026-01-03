@@ -244,9 +244,11 @@ public class CoreListener implements Listener {
     @EventHandler(priority = EventPriority.LOW)
     public void onAbilityRecalculateAttribute(AbilityRecalculateAttributeEvent event) {
         if (CoreMethods.HassetAttributesbeencalled) {
-            NamespacedKey key = new NamespacedKey(Hyperion.getPlugin(), CoreMethods.key1);
-            event.addModification(AttributeModification.of(AttributeModifier.SET, CoreMethods.value1, key));
-            log.info("Recalculated Ability Attribute");
+			if ((CoreMethods.attributedabil.equals(event.getAbility()))) {
+				NamespacedKey key = new NamespacedKey(Hyperion.getPlugin(), CoreMethods.key1);
+				event.addModification(AttributeModification.of(AttributeModifier.SET, CoreMethods.value1, key));
+				log.info("Recalculated Ability Attribute");
+			}
         }
     }
 

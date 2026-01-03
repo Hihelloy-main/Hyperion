@@ -72,6 +72,7 @@ public class CoreMethods {
     public static Number value1;
     public static String key1;
     public static boolean HassetAttributesbeencalled;
+	public static CoreAbility attributedabil;
 
 	public static List<Location> getCirclePoints(Location location, int points, double size) {
 		List<Location> locations = new ArrayList<>();
@@ -252,6 +253,7 @@ public class CoreMethods {
 			} else {
 				continue;
 			}
+			attributedabil = ability;
 			HassetAttributesbeencalled = true;
             value1 = value;
             key1 = key;
