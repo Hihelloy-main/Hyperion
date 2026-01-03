@@ -23,7 +23,6 @@ repositories {
 dependencies {
     // Provided by server
     compileOnly("org.spigotmc:spigot-api:1.20.2-R0.1-SNAPSHOT")
-    compileOnly("org.jetbrains:annotations:26.0.2")
     compileOnly("com.projectkorra:projectkorra:1.12.1-PRE-RELEASE-1")
 
     // Included in plugin jar
@@ -31,6 +30,7 @@ dependencies {
     implementation("com.cjcrafter:foliascheduler:0.7.2")
     implementation("net.kyori:adventure-api:4.26.1")
     implementation("net.kyori:adventure-platform-bukkit:4.4.1")
+    implementation("org.jetbrains:annotations:26.0.2")
 }
 
 tasks {
