@@ -241,7 +241,7 @@ public class CoreListener implements Listener {
 		}
 	}
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOW)
     public void onAbilityRecalculateAttribute(AbilityRecalculateAttributeEvent event) {
         if (CoreMethods.HassetAttributesbeencalled) {
             NamespacedKey key = new NamespacedKey(Hyperion.getPlugin(), CoreMethods.key1);
