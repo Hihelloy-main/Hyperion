@@ -25,6 +25,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import me.moros.hyperion.Elements;
 
 
+import me.moros.hyperion.Hyperion;
+import net.kyori.adventure.key.Key;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -135,7 +137,7 @@ public abstract class FireAbility extends ElementalAbility {
             if (block.getType() == Material.WET_SPONGE) {
                 block.setType(Material.SPONGE);
                 if (playSound) {
-                    block.getWorld().playSound(block.getLocation(), Sound.BLOCK_FIRE_EXTINGUISH, 0.5F, 1.0F);
+                    plugin.adventure().world(Key.key(block.getWorld().getName())).playSound(net.kyori.adventure.sound.Sound.sound(Key.key("block.fire.extinguish"), net.kyori.adventure.sound.Sound.Source.PLAYER, 0.5F, 1.0F), block.getLocation().getX(), block.getLocation().getY(), block.getLocation().getZ());
                 }
             } else if (isSnow(block)) {
                 block.getWorld().spawnParticle(Particle.BLOCK_DUST, block.getLocation().add(0.5F, 0.5F, 0.5F), 2, 0.5F, 0.5F, 0.5F, 0.1, Material.SNOW_BLOCK.createBlockData());

@@ -43,6 +43,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.title.Title;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TranslatableComponent;
 import org.bukkit.*;
@@ -75,6 +76,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import static me.moros.hyperion.Hyperion.*;
 
 public class CoreListener implements Listener {
+
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void EntityChangeBlockEvent(final EntityChangeBlockEvent event) {
 		if (event.getEntityType().equals(EntityType.FALLING_BLOCK)) {
@@ -247,7 +249,6 @@ public class CoreListener implements Listener {
 			if ((CoreMethods.attributedabil.equals(event.getAbility()))) {
 				NamespacedKey key = new NamespacedKey(Hyperion.getPlugin(), CoreMethods.key1);
 				event.addModification(AttributeModification.of(AttributeModifier.SET, CoreMethods.value1, key));
-				log.info("Recalculated Ability Attribute");
 			}
         }
     }

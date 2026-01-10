@@ -146,6 +146,7 @@ public class Hyperion extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
+		ThreadUtil.shutdown();
 		TempFallingBlock.removeAllFallingBlocks();
 		TempBlock.removeAll();
 		BendingFallingBlock.removeAll();

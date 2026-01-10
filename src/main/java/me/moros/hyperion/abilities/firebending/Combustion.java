@@ -34,6 +34,7 @@ import me.moros.hyperion.Hyperion;
 import me.moros.hyperion.methods.CoreMethods;
 import me.moros.hyperion.util.FastMath;
 import me.moros.hyperion.util.MaterialCheck;
+import net.kyori.adventure.key.Key;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -161,7 +162,7 @@ public class Combustion extends CombustionAbility implements AddonAbility {
 		final Vector direction = player.getEyeLocation().getDirection();
 		ThreadLocalRandom rand = ThreadLocalRandom.current();
 		if (distanceTravelled >= randomBeamDistance) {
-			player.getWorld().playSound(location, Sound.ENTITY_FIREWORK_ROCKET_BLAST, 1.5f, 0.01F);
+			Hyperion.plugin.adventure().player(player).playSound(net.kyori.adventure.sound.Sound.sound(Key.key("entity.firework_rocket.blast"), net.kyori.adventure.sound.Sound.Source.PLAYER, 1.5f, 0.01f), location.getX(), location.getY(), location.getZ());
 			randomBeamDistance = distanceTravelled + 7 + 3 * rand.nextGaussian();
 			double radius = rand.nextDouble(0.6, 1.6);
 			for (int angle = 0; angle <= 360; angle += 12) {
@@ -185,7 +186,7 @@ public class Combustion extends CombustionAbility implements AddonAbility {
 					return;
 				}
 				if (rand.nextInt(3) == 0) {
-					location.getWorld().playSound(location, Sound.ENTITY_FIREWORK_ROCKET_BLAST, 1, 0.01F);
+					Hyperion.plugin.adventure().world(Key.key(location.getWorld().getName())).playSound(net.kyori.adventure.sound.Sound.sound(Key.key("entity.firework_rocket.blast"), net.kyori.adventure.sound.Sound.Source.PLAYER, 1, 0.01F), location.getX(), location.getY(), location.getZ());
 				}
 				if (location.getBlock().isLiquid() || !isTransparent(location.getBlock())) {
 					createExplosion(location, power, damage);

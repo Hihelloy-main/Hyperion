@@ -1,12 +1,15 @@
 package me.moros.hyperion.listeners;
 
 import me.moros.hyperion.Hyperion;
+import me.moros.hyperion.util.ThreadUtil;
 import me.moros.hyperion.util.UpdateChecker;
+import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

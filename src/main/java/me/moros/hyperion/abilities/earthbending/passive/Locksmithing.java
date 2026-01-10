@@ -9,6 +9,7 @@ import com.projectkorra.projectkorra.ability.PassiveAbility;
 import com.projectkorra.projectkorra.region.RegionProtection;
 import me.moros.hyperion.Hyperion;
 import me.moros.hyperion.util.MaterialCheck;
+import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -81,7 +82,7 @@ public class Locksmithing extends MetalAbility implements AddonAbility, PassiveA
 					String keyName = getOrCreateKey(key, meta);
 					container.setLock(keyName);
 					state.update();
-					block.getWorld().playSound(loc, Sound.BLOCK_CHEST_LOCKED, 1, 1);
+					Hyperion.plugin.adventure().world(Key.key(block.getWorld().getName())).playSound(net.kyori.adventure.sound.Sound.sound(Key.key("block.chest.locked"), net.kyori.adventure.sound.Sound.Source.PLAYER, 1, 1), block.getX(), block.getY(), block.getZ());
 					Hyperion.plugin.adventure().player(player).sendMessage(
 							Component.text("Locked", TextColor.color(Element.METAL.getColor().getColor().getRGB()))
 									.decorate(TextDecoration.BOLD)

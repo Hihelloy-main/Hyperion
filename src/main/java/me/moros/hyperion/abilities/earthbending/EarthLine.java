@@ -30,7 +30,6 @@ import com.projectkorra.projectkorra.earthbending.RaiseEarth;
 import com.projectkorra.projectkorra.earthbending.passive.DensityShift;
 import com.projectkorra.projectkorra.firebending.util.FireDamageTimer;
 import com.projectkorra.projectkorra.region.RegionProtection;
-import com.projectkorra.projectkorra.util.ActionBar;
 import com.projectkorra.projectkorra.util.DamageHandler;
 import com.projectkorra.projectkorra.util.MovementHandler;
 import com.projectkorra.projectkorra.util.ParticleEffect;
@@ -39,6 +38,8 @@ import me.moros.hyperion.Hyperion;
 import me.moros.hyperion.methods.CoreMethods;
 import me.moros.hyperion.util.BendingFallingBlock;
 import me.moros.hyperion.util.TempArmorStand;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -233,7 +234,7 @@ public class EarthLine extends EarthAbility implements AddonAbility {
 		if (mode != EarthLineMode.NORMAL) return;
 		ticks = 0;
 		mode = EarthLineMode.PRISON;
-		ActionBar.sendActionBar(getElement().getColor() + "* Prison Mode *", player);
+		Hyperion.plugin.adventure().player(player).sendActionBar(Component.text("* Prison Mode *", TextColor.color(getElement().getColor().getColor().getRGB())));
 	}
 
 	private void imprisonTarget() {
